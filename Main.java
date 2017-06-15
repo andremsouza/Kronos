@@ -8,7 +8,7 @@ public class Main {
 		wc.atualizarInicio(s);
 		wc.atualizarFim(s);
 		//wc.mostraValores();
-		wc.valorProporcional();
+		wc.valorProporcionalDataFim();
 	}
 
 }

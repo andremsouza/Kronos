@@ -24,14 +24,14 @@ public class Dates {
 	public Dates() throws Exception{
 		BufferedReader in;
 		in = new BufferedReader(new FileReader("datas.txt"));
-		int i=1;
+		int i=0;
 		Scanner scan1=new Scanner(in);
 		while (scan1.hasNext()){
 			LocalDate data = LocalDate.parse(scan1.next());
+			i++;
 				m1.put(data, i);
-				i++;
 		}
-		totaldias=fim=i-1;
+		totaldias=fim=i;
 		in = new BufferedReader(new FileReader("valores.txt"));
 		Scanner scan2=new Scanner(in);
 		valorinfantil=Double.parseDouble(scan2.next());
@@ -57,6 +57,20 @@ public class Dates {
 	    BigDecimal bd = new BigDecimal(value);
 	    bd = bd.setScale(places, RoundingMode.HALF_UP);
 	    return bd.doubleValue();
+	}
+	
+	public int achaDataFim (String s){
+		LocalDate data;
+		int aux=Integer.parseInt(s.substring(8));
+		while (true){
+			data=LocalDate.parse(s);
+			if (m1.containsKey(data))
+				break;
+			aux--;
+			s=s.substring(0,8);
+			s+=aux;
+		}
+		return m1.get(data);
 	}
 	
 	public void atualizarInicio(String s){
@@ -85,22 +99,23 @@ public class Dates {
 		valormatriculafundam=s;
 	}
 	
-	public void valorProporcional () throws InterruptedException{
+	public void valorProporcionalDataFim () throws InterruptedException{
+		int ndias=-1;
 		LocalDate data = LocalDate.now();
 		double infantil=0,fundamental=0;
 		String dia="",mes="",aux="";
-		Scanner keyboard = new Scanner(System.in);
+		Scanner teclado = new Scanner(System.in);
 		System.out.println("Digite o Dia");
-		dia= keyboard.nextLine();
+		dia= teclado.nextLine();
 		while (Integer.parseInt(dia)>31 || Integer.parseInt(dia)<1 || dia.length()>2){
 			System.out.println("Dia invalido, digite novamente");
-			dia= keyboard.nextLine();
+			dia= teclado.nextLine();
 		}
 		System.out.println("Digite o Mes");
-		mes= keyboard.nextLine();
+		mes= teclado.nextLine();
 		while (Integer.parseInt(mes)>12 || Integer.parseInt(mes)<1 || mes.length()>2){
 			System.out.println("Mes invalido, digite novamente");
-			mes= keyboard.nextLine();
+			mes= teclado.nextLine();
 		}
 		aux=(Integer.toString(data.getYear()));
 		aux+="-";
@@ -109,10 +124,11 @@ public class Dates {
 		aux+=mes;
 		aux+="-";
 		aux+=dia;
-		data=LocalDate.parse(aux);
-		fim=m1.get(data);
-		infantil+=(fim-inicio+1)*(valorinfantil*12/totaldias);
-		fundamental+=(fim-inicio+1)*(valorfundamental*12/totaldias);
+		//data=LocalDate.parse(aux);
+		ndias=this.achaDataFim(aux);
+		//fim=m1.get(data);
+		infantil+=(ndias-inicio+1)*(valorinfantil*12/totaldias);
+		fundamental+=(ndias-inicio+1)*(valorfundamental*12/totaldias);
 		if (matricula){
 			infantil+=valormatriculainfant;
 			fundamental+=valormatriculafundam;
@@ -121,6 +137,6 @@ public class Dates {
 		fundamental=round(fundamental,2);
 		System.out.println("Valor Proporcional Infantil "+infantil);
 		System.out.println("Valor Proporcional Fundamental "+fundamental);
-		keyboard.close();
+		teclado.close();
 	}
 }
