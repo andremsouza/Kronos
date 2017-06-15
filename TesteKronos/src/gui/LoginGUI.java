@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
 
-public class LoignGUI {
+public class LoginGUI {
 
 	private JFrame frame;
 	private JTextField username;
@@ -21,7 +21,7 @@ public class LoignGUI {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					LoignGUI window = new LoignGUI();
+					LoginGUI window = new LoginGUI();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -30,7 +30,7 @@ public class LoignGUI {
 		});
 	}
 
-	public LoignGUI() {
+	public LoginGUI() {
 		initialize();
 	}
 	
@@ -81,7 +81,7 @@ public class LoignGUI {
 				if(privileges == -1) JOptionPane.showMessageDialog(null, "Usuário ou senha incorretos", "Erro", JOptionPane.ERROR_MESSAGE);
 				else {
 					frame.dispose();
-					ProgramFrame pf = new ProgramFrame(privileges);
+					MainGUI pf = new MainGUI(privileges);
 					pf.setVisible(true);
 				}
 			}
