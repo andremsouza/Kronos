@@ -10,8 +10,7 @@ import java.util.Set;
 public class Admin extends Funcionario{
 	private static final long serialVersionUID = 1L;
 	
-	public Admin(String nome, String login, String senha){
-		this.nome = nome;
+	public Admin(String login, String senha){
 		this.login = login;
 		this.senha = hashSenha(senha);
 		this.tipo = 3;
@@ -19,15 +18,15 @@ public class Admin extends Funcionario{
 	
 	@Override
 	public String toString() {
-		return "Name:" + nome + "\nLogin: " + login + "\nSenha: " + senha;
+		return "Login: " + login + "\nSenha: " + senha;
 	}
 	
-	public void criaDiretor(String nome, String login, String senha){
-		Diretor d = new Diretor(nome, login, senha);
+	public void criaDiretor(String login, String senha){
+		Diretor d = new Diretor(login, senha);
 	}
 	
-	public void criaSecretario(String nome, String login, String senha){
-		Secretario d = new Secretario(nome, login, senha);
+	public void criaSecretario(String login, String senha){
+		Secretario d = new Secretario(login, senha);
 	}
 	
 	private static void mudarSenha(String login, String NovaSenha){
@@ -70,16 +69,17 @@ public class Admin extends Funcionario{
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		//Diretor teste = new Diretor("a","b","c");
-		//Diretor teste2 = new Diretor("d","e","f");
+		//Diretor teste2 = new Diretor("login", "senha");
 		//Secretario teste3 = new Secretario("g","h","i");
-		//Diretor teste4 = new Diretor("q","r","t");
 		mudarSenha("b", "d");
 		if(validaUsuario("b","c") == 1) System.out.println("Achou Diretor");
 		if(validaUsuario("h","i") == 2) System.out.println("Achou Secretario");
 		if(validaUsuario("admin","adm123") == 3) System.out.println("Achou Admin");
 		if(validaUsuario("admin","adm123") == -1) System.out.println("Não achou");
 		if(validaUsuario("admin","adm12") == -1) System.out.println("Não achou");
+		//escreverLog("oi");
+		retornaContas();
+		
 	}
 
 }

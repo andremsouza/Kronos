@@ -11,7 +11,6 @@ import java.nio.file.*;
  *
  */
 abstract class Funcionario implements Serializable{
-	protected String nome;
 	protected String login;
 	protected String senha;
 	protected int tipo; // '1' para Diretor e '2' para Secretário
@@ -22,7 +21,7 @@ abstract class Funcionario implements Serializable{
 	 * 
 	 * @param tlogin é o login a ser testado
 	 * @param tsenha é a senha a ser testada
-	 * @return '-1' se as informações não são coerentes, '1' se for um diretor, '2' se for um secretario ou '3' se for admin
+	 * @return '-1' se as informações não são coerentes, '1' se for um secretário, '2' se for um diretor ou '3' se for admin
 	 */
 	static int validaUsuario(String tlogin, String tsenha){
 		int tipo = -1;
@@ -30,7 +29,7 @@ abstract class Funcionario implements Serializable{
 			Path path = Paths.get("data");
 
 			if (Files.notExists(path)) { 				// Se o arquivo não existe ainda, criamos e inserimos o admin
-				Admin adm = new Admin("admin", "admin", "adm123");
+				Admin adm = new Admin("admin", "adm123");
 				funcionarios.add(adm);
 				FileOutputStream f = new FileOutputStream(new File("data"));
 				ObjectOutputStream o = new ObjectOutputStream(f);
@@ -57,7 +56,7 @@ abstract class Funcionario implements Serializable{
 		} catch (FileNotFoundException e) {
 			System.out.println("Nenhum objeto inserido somado ao fato de não ter o arquivo");
 		} catch (IOException e) {
-			System.out.println("Error initializing stream");
+			System.out.println("Erro de inicialização");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -109,7 +108,7 @@ abstract class Funcionario implements Serializable{
 			}
 
 			if (Files.notExists(path)) {
-				Admin adm = new Admin("admin", "admin", "adm123");
+				Admin adm = new Admin("admin", "adm123");
 				funcionarios.add(adm);
 			}
 			
@@ -125,11 +124,99 @@ abstract class Funcionario implements Serializable{
 			f.close();
 
 		} catch (FileNotFoundException e) {
-			System.out.println("File not found");
+			System.out.println("Arquivo não encontrado");
 		} catch (IOException e) {
-			System.out.println("Error initializing stream");
+			System.out.println("Erro de inicialização");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
+	
+	public static void escreverLog(String texto){
+		try
+		{
+		    String filename= "log";
+		    FileWriter fw = new FileWriter(filename,true); 		//true vai escrever no fim do arquivo
+		    fw.write(texto+"\n");		//escreve no fim do arquivo
+		    fw.close();
+		}
+		catch(IOException ioe)
+		{
+		    System.err.println("IOException: " + ioe.getMessage());
+		}
+	}
+	
+	/**
+	 * Retorna uma matriz de string com todos os dados de todos os usuários
+	 * @return
+	 */
+	static String[][] retornaContas(){
+		String [][] Contas;
+		try{
+			Path path = Paths.get("data");
+
+			if (Files.notExists(path)) { 				// Se o arquivo não existe ainda, criamos e inserimos o admin
+				Admin adm = new Admin("admin", "adm123");
+				funcionarios.add(adm);
+				FileOutputStream f = new FileOutputStream(new File("data"));
+				ObjectOutputStream o = new ObjectOutputStream(f);
+
+				o.writeObject(funcionarios);
+				o.close();
+				f.close();
+			}
+			
+			// Lê os objetos salvando as informações
+			FileInputStream fi = new FileInputStream(new File("data"));
+			ObjectInputStream oi = new ObjectInputStream(fi);
+
+			funcionarios = (Set<Funcionario>) oi.readObject();
+			
+			Contas = new String[funcionarios.size()][3];
+			
+			int contador=0;
+			for(Funcionario funcionario : funcionarios){
+				Contas[contador][0] = funcionario.login;
+				Contas[contador][1] = funcionario.senha;
+				Contas[contador][2] = Integer.toString(funcionario.tipo);
+				contador++;
+			}
+			
+			System.out.println(funcionarios.size());
+			for(int i=0; i<funcionarios.size(); i++){
+				System.out.println(Contas[i][0] + " "+Contas[i][1] + " "+Contas[i][2] + "\n");
+			}
+			
+			oi.close();
+			fi.close();
+
+		} catch (FileNotFoundException e) {
+			Contas = new String[0][0];
+			Contas[0][0] = "Erro, não há nenhuma conta.";
+			System.out.println("Nenhum objeto inserido somado ao fato de não ter o arquivo");
+		} catch (IOException e) {
+			System.out.println("Erro");
+			Contas = new String[0][0];
+			Contas[0][0] = "Erro";
+		} catch (ClassNotFoundException e) {
+			Contas = new String[0][0];
+			Contas[0][0] = "Erro";
+			e.printStackTrace();
+		}
+		return Contas;
+	}
 }
+
+
+
+/*
+ * coisas a fazer:
+ * tirar nome, vai ter só uma conta pra funcionario, login pode diferenciar diretores e admin
+ * deletar contas
+ * string[][] i até numero de funcionario // j vai de 0 a 2 -> login, senha, tipo
+ * hash set aceitando elementos igauis
+ * 
+ */
+
+
+
