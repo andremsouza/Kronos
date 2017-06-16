@@ -1,7 +1,10 @@
 package operations;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.*;
@@ -14,6 +17,7 @@ public class Dates {
 	Map<LocalDate,Integer> m1 = new TreeMap<LocalDate,Integer>();
 	Map<String,Double> m2 = new TreeMap<String,Double>();
 	boolean matricula=false;
+	boolean integral=false;
 	int inicio=1;
 	int fim=-1;
 	int totaldias=-1;
@@ -29,8 +33,9 @@ public class Dates {
 		in = new BufferedReader(new FileReader("datas.txt"));
 		int i=0;
 		Scanner scan1=new Scanner(in);
+		LocalDate data = LocalDate.now();
 		while (scan1.hasNext()){
-			LocalDate data = LocalDate.parse(scan1.next());
+			data = LocalDate.parse(scan1.next());
 			i++;
 				m1.put(data, i);
 		}
@@ -52,30 +57,14 @@ public class Dates {
 		scan3.close();
 	}
 	
-	///Apenas para testes
-	public void mostraMapa (){
-		System.out.println(m2.keySet());
-		System.out.println(m2.values());
-	}
-	
-	///Apenas para testes
-	public void mostraValores (){
-		System.out.println("valor infantil "+valorinfantil);
-		System.out.println("valor fundamental "+valorfundamental);
-		System.out.println("valor matricula infantil "+valormatriculainfant);
-		System.out.println("valor matricula fundamental "+valormatriculafundam);
-		System.out.println("inicio "+inicio);
-		System.out.println("fim "+fim);
-		System.out.println("totaldias "+totaldias);
-		
-	}
-	
 	///get do valor
 	public double valor (int tipo){
 		if (tipo==1)
 			return valorinfantil;
 		else if (tipo==2)
 			return valorfundamental;
+		else if (tipo==3)
+			return valorintegral;
 		return -1;
 	}
 	
@@ -144,18 +133,6 @@ public class Dates {
 	}
 	
 	///Apenas Diretor/Admin
-	public void atualizarInicio(String s){
-		LocalDate data = LocalDate.parse(s);
-		inicio=m1.get(data);
-	}
-
-	///Apenas Diretor/Admin
-	public void atualizarFim(String s){
-		LocalDate data = LocalDate.parse(s);
-		fim=m1.get(data);
-	}
-	
-	///Apenas Diretor/Admin
 	public void atualizarValorInfantil(double s){
 		valorinfantil=s;
 	}
@@ -174,6 +151,11 @@ public class Dates {
 	public void atualizarMatriculaFundamental(double s){
 		valormatriculafundam=s;
 	}
+		
+	///Apenas Diretor/Admin
+	public void atualizarIntegral(double s){
+		valorintegral=s;
+	}
 	
 	///Todos
 		public void atualizarMatricula(boolean s){
@@ -181,12 +163,11 @@ public class Dates {
 		}
 		
 	///Calcula valor com data de termino fora do padrao
-	public double valorProporcional (int dia, int mes, int tipo, boolean termino) throws InterruptedException{
+	public double valorProporcional (int dia, int mes, int tipo, boolean termino, boolean integral) throws InterruptedException{
 		int ndias=-1;
 		LocalDate data = LocalDate.now();
 		double total=0;
 		String aux="";
-		Scanner teclado = new Scanner(System.in);
 		aux=(Integer.toString(data.getYear()));
 		aux+="-";
 		if (String.valueOf(mes).length()==1)
@@ -201,45 +182,101 @@ public class Dates {
 		else
 			ndias=this.achaDataComeco(aux);
 		if (ndias==-1){
-			teclado.close();
 			return -1;
 		}
 		if (tipo==1){
 			if (termino)
-				total+=(ndias-inicio+1)*(valorinfantil*12/totaldias);
+				if (integral)
+					total+=(ndias-inicio+1)*((valorinfantil+valorintegral)*12/totaldias);
+				else
+					total+=(ndias-inicio+1)*(valorinfantil*12/totaldias);
 			else
-				total+=(fim-ndias+1)*(valorinfantil*12/totaldias);
+				if (integral)
+					total+=(fim-ndias+1)*((valorinfantil+valorintegral)*12/totaldias);
+				else
+					total+=(fim-ndias+1)*(valorinfantil*12/totaldias);
 			if (matricula)
 				total+=valormatriculainfant;
 		}
 		else if (tipo==2){
 			if (termino)
-				total+=(ndias-inicio+1)*(valorfundamental*12/totaldias);
+				if (integral)
+					total+=(ndias-inicio+1)*((valorfundamental+valorintegral)*12/totaldias);
+				else
+					total+=(ndias-inicio+1)*(valorfundamental*12/totaldias);
 			else
-				total+=(fim-ndias+1)*(valorfundamental*12/totaldias);
+				if (integral)
+					total+=(fim-ndias+1)*((valorfundamental+valorintegral)*12/totaldias);
+				else
+					total+=(fim-ndias+1)*(valorfundamental*12/totaldias);
 			if (matricula)
 				total+=valormatriculafundam;
 		}
 		total=round(total,2);
-		teclado.close();
 		return total;
 	}
 	
 	///Calcula quantas parcelas inteiras
-	public int quantasInteiras (double s, int tipo){
+	public int quantasInteiras (double s, int tipo, boolean integral){
 		if (tipo==1)
-			return (int)(s/valorinfantil);
+			if (integral)
+				return (int)(s/(valorinfantil+valorintegral));
+			else
+				return (int)(s/valorinfantil);
 		else if (tipo==2)
-			return (int)(s/valorfundamental);
+			if (integral)
+				return (int)(s/(valorfundamental+valorintegral));
+			else
+				return (int)(s/valorfundamental);
 		return -1;
 	}
 	
 	///Calcula o valor da parcela proporcional
-	public double valorParcelaProporcional (double s, int tipo){
+	public double valorParcelaProporcional (double s, int tipo, boolean integral){
 		if (tipo==1)
-			return round(s%valorinfantil,2);
+			if (integral)
+				return round(s%(valorinfantil+valorintegral),2);
+			else
+				return round(s%valorinfantil,2);
 		else if (tipo==2)
-			return round(s%valorfundamental,2);
+			if (integral)
+				return round(s%(valorfundamental+valorintegral),2);
+			else
+				return round(s%valorfundamental,2);
 		return -1;
 	}
+	
+	///Adiciona curso novo e tambem atualiza valor de algum curso
+		public void adicionaCurso (String s, double v){
+			m2.put(s.toLowerCase(), v);
+		}
+		
+	///Remove Curso
+		public void RemoveCurso (String s){
+			m2.remove(s.toLowerCase());
+		}
+		
+	///funcao que escreve os valores finais nos arquivos quando o programa for fechar
+		public void fimDePrograma () throws IOException{
+			BufferedWriter out = new BufferedWriter(new FileWriter("valores.txt"));
+			out.write(valorinfantil+"");
+			out.newLine();
+			out.write(valormatriculainfant+"");
+			out.newLine();
+			out.write(valorfundamental+"");
+			out.newLine();
+			out.write(valormatriculafundam+"");
+			out.newLine();
+			out.write(valorintegral+"");
+			out.close();
+			out = new BufferedWriter(new FileWriter("cursos.txt"));
+			for (Map.Entry<String, Double> entry : m2.entrySet()) {
+			     out.write(entry.getKey() + "");
+			     out.newLine();
+			     out.write(entry.getValue() + "");
+			     out.newLine();
+			
+		}
+			out.close();
+		}
 }
