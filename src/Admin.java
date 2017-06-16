@@ -49,7 +49,7 @@ public class Admin extends Funcionario{
 	 * @param d
 	 * @return
 	 */
-	private boolean armazenaUsuario(Funcionario d){
+	public boolean armazenaUsuario(Funcionario d){
 		try {
 			File file = new File("data");
 			
@@ -90,7 +90,7 @@ public class Admin extends Funcionario{
 	 * @param login
 	 * @param NovaSenha
 	 */
-	private void mudarSenha(String login, String NovaSenha){
+	public void mudarSenha(String login, String NovaSenha){
 		
 		//Verifica se o arquivo de dados existe e caso não exista, o arquivo é criado e inicializado
 		verificaArquivo();
@@ -129,7 +129,7 @@ public class Admin extends Funcionario{
 	 * @param tlogin
 	 * @return 
 	 */
-	private boolean removeUsuario(String tlogin){
+	public boolean removeUsuario(String tlogin){
 		
 		//Verifica se o arquivo de dados existe e caso não exista, o arquivo é criado e inicializado
 		verificaArquivo();
@@ -172,31 +172,6 @@ public class Admin extends Funcionario{
 	@Override
 	public String toString() {
 		return "Login: " + login + "\nSenha: " + senha;
-	}
-
-
-	/**
-	 * Criada apenas para testes
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		Admin adm = new Admin("adm", "123");
-		//adm.criaDiretor("diretora", "senha");
-		//adm.criaDiretor("diretor", "senha");
-		adm.criaSecretario("secretario", "senha2");
-		adm.criaSecretario("secretaria", "senha3");
-		adm.criaAdmin("adminn", "senha2");
-		adm.criaAdmin("admina", "senha3");
-		retornaContas();
-		
-		
-		System.out.println(validaUsuario("diretor","senh"));
-		adm.mudarSenha("diretor", "senha");
-		System.out.println(validaUsuario("diretor","senha"));
-		
-		//retornaContas();
-		adm.removeUsuario("diretora");
-		retornaContas();
 	}
 
 }

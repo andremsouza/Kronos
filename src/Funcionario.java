@@ -77,7 +77,7 @@ abstract class Funcionario implements Serializable{
 	 * @param tsenha é a senha a ser testada
 	 * @return '-1' se as informações não são coerentes, '1' se for um secretário, '2' se for um diretor ou '3' se for admin
 	 */
-	static int validaUsuario(String tlogin, String tsenha){
+	public int validaUsuario(String tlogin, String tsenha){
 		int tipo = -1;
 		
 		//Verifica se o arquivo de dados existe e caso não exista, o arquivo é criado e inicializado
@@ -141,7 +141,7 @@ abstract class Funcionario implements Serializable{
 	 * Retorna um vetor de matrizes com todos os dados de todos os usuários
 	 * @return 
 	 */
-	static String[][] retornaContas(){
+	public String[][] retornaContas(){
 		String [][] Contas;
 		
 		//Verifica se o arquivo de dados existe e caso não exista, o arquivo é criado e inicializado
