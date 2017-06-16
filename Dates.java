@@ -21,6 +21,7 @@ public class Dates {
 	double valormatriculainfant=-1;
 	double valormatriculafundam=-1;
 	
+	///Construtor
 	public Dates() throws Exception{
 		BufferedReader in;
 		in = new BufferedReader(new FileReader("datas.txt"));
@@ -42,6 +43,7 @@ public class Dates {
 		scan2.close();
 	}
 	
+	///Apenas para testes
 	public void mostraValores (){
 		System.out.println("valor infantil "+valorinfantil);
 		System.out.println("valor fundamental "+valorfundamental);
@@ -52,6 +54,7 @@ public class Dates {
 		System.out.println("totaldias "+totaldias);
 	}
 	
+	///Apenas para arredondar o valor final da funcao
 	protected static double round(double value, int places) {
 	    if (places < 0) throw new IllegalArgumentException();
 	    BigDecimal bd = new BigDecimal(value);
@@ -59,84 +62,168 @@ public class Dates {
 	    return bd.doubleValue();
 	}
 	
+	///Corrige erro do usuario
 	public int achaDataFim (String s){
 		LocalDate data;
-		int aux=Integer.parseInt(s.substring(8));
+		int auxdia=Integer.parseInt(s.substring(8));
+		int auxmes=Integer.parseInt(s.substring(5,7));
 		while (true){
 			data=LocalDate.parse(s);
 			if (m1.containsKey(data))
 				break;
-			aux--;
-			s=s.substring(0,8);
-			s+=aux;
+			auxdia--;
+			s=s.substring(0,5);
+			if (auxdia<1){
+				auxdia=31;
+				auxmes--;
+				if (auxmes<1)
+					return -1;
+			}
+			if (auxmes<10)
+				s+='0';
+			s+=auxmes;
+			s+='-';
+			if (auxdia<10)
+				s+='0';
+			s+=auxdia;
 		}
 		return m1.get(data);
 	}
 	
+	///Corrige erro do usuario
+	public int achaDataComeco (String s){
+		LocalDate data;
+		int auxdia=Integer.parseInt(s.substring(8));
+		int auxmes=Integer.parseInt(s.substring(5,7));
+		while (true){
+			data=LocalDate.parse(s);
+			if (m1.containsKey(data))
+				break;
+			auxdia++;
+			s=s.substring(0,5);
+			if (auxdia>31){
+				auxdia=1;
+				auxmes++;
+				if (auxmes>12)
+					return -1;
+			}
+			if (auxmes<10)
+				s+='0';
+			s+=auxmes;
+			s+='-';
+			if (auxdia<10)
+				s+='0';
+			s+=auxdia;
+		}
+		return m1.get(data);
+	}
+	
+	///Apenas Diretor/Admin
 	public void atualizarInicio(String s){
 		LocalDate data = LocalDate.parse(s);
 		inicio=m1.get(data);
 	}
 
+	///Apenas Diretor/Admin
 	public void atualizarFim(String s){
 		LocalDate data = LocalDate.parse(s);
 		fim=m1.get(data);
 	}
 	
-	public void atualizarMatricula(boolean s){
-		matricula=s;
-	}
+	///Apenas Diretor/Admin
 	public void atualizarValorInfantil(double s){
 		valorinfantil=s;
 	}
+	
+	///Apenas Diretor/Admin
 	public void atualizarValorFundamental(double s){
 		valorfundamental=s;
 	}
+	
+	///Apenas Diretor/Admin
 	public void atualizarMatriculaInfantil(double s){
 		valormatriculainfant=s;
 	}
+	
+	///Apenas Diretor/Admin
 	public void atualizarMatriculaFundamental(double s){
 		valormatriculafundam=s;
 	}
 	
-	public void valorProporcionalDataFim () throws InterruptedException{
+	///Todos
+		public void atualizarMatricula(boolean s){
+			matricula=s;
+		}
+	
+	///Calcula valor com data de termino fora do padrao
+	public double valorProporcionalDataFim (int dia, int mes, int tipo) throws InterruptedException{
 		int ndias=-1;
 		LocalDate data = LocalDate.now();
-		double infantil=0,fundamental=0;
-		String dia="",mes="",aux="";
+		double total=0;
+		String aux="";
 		Scanner teclado = new Scanner(System.in);
-		System.out.println("Digite o Dia");
-		dia= teclado.nextLine();
-		while (Integer.parseInt(dia)>31 || Integer.parseInt(dia)<1 || dia.length()>2){
-			System.out.println("Dia invalido, digite novamente");
-			dia= teclado.nextLine();
-		}
-		System.out.println("Digite o Mes");
-		mes= teclado.nextLine();
-		while (Integer.parseInt(mes)>12 || Integer.parseInt(mes)<1 || mes.length()>2){
-			System.out.println("Mes invalido, digite novamente");
-			mes= teclado.nextLine();
-		}
 		aux=(Integer.toString(data.getYear()));
 		aux+="-";
-		if (mes.length()==1)
-		aux+="0";	
+		if (String.valueOf(mes).length()==1)
+			aux+="0";	
 		aux+=mes;
 		aux+="-";
+		if (String.valueOf(dia).length()==1)
+			aux+="0";
 		aux+=dia;
-		//data=LocalDate.parse(aux);
 		ndias=this.achaDataFim(aux);
-		//fim=m1.get(data);
-		infantil+=(ndias-inicio+1)*(valorinfantil*12/totaldias);
-		fundamental+=(ndias-inicio+1)*(valorfundamental*12/totaldias);
-		if (matricula){
-			infantil+=valormatriculainfant;
-			fundamental+=valormatriculafundam;
+		if (ndias==-1){
+			teclado.close();
+			return -1;
 		}
-		infantil=round(infantil,2);
-		fundamental=round(fundamental,2);
-		System.out.println("Valor Proporcional Infantil "+infantil);
-		System.out.println("Valor Proporcional Fundamental "+fundamental);
+		if (tipo==1){
+			total+=(ndias-inicio+1)*(valorinfantil*12/totaldias);
+			if (matricula)
+				total+=valormatriculainfant;
+		}
+		if (tipo==2){
+			total+=(ndias-inicio+1)*(valorfundamental*12/totaldias);
+			if (matricula)
+				total+=valormatriculafundam;
+		}
+		total=round(total,2);
 		teclado.close();
+		return total;
+	}
+	
+	///Calcula valor com data de comeco fora do padrao
+	public double valorProporcionalDataComeco (int dia, int mes, int tipo) throws InterruptedException{
+		int ndias=-1;
+		LocalDate data = LocalDate.now();
+		double total=0;
+		String aux="";
+		Scanner teclado = new Scanner(System.in);
+		aux=(Integer.toString(data.getYear()));
+		aux+="-";
+		if (String.valueOf(mes).length()==1)
+			aux+="0";	
+		aux+=mes;
+		aux+="-";
+		if (String.valueOf(dia).length()==1)
+			aux+="0";
+		aux+=dia;
+		ndias=this.achaDataComeco(aux);
+		if (ndias==-1){
+			teclado.close();
+			return -1;
+		}
+		if (tipo==1){
+			total+=(fim-ndias+1)*(valorinfantil*12/totaldias);
+			if (matricula)
+				total+=valormatriculainfant;
+		}
+		if (tipo==2){
+			total+=(fim-ndias+1)*(valorfundamental*12/totaldias);
+			if (matricula)
+				total+=valormatriculafundam;
+		}
+		total=round(total,2);
+		teclado.close();
+		return total;
 	}
 }
