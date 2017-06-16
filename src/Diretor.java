@@ -1,5 +1,3 @@
-import java.io.Serializable;
-
 public class Diretor extends Funcionario{
 	
 	private static final long serialVersionUID = 1L;
@@ -8,7 +6,6 @@ public class Diretor extends Funcionario{
 		this.login = login;
 		this.senha = hashSenha(senha);
 		this.tipo = 2;
-		escreverArquivo(this);
 	}
 	
 	@Override

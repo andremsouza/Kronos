@@ -6,7 +6,6 @@ public class Secretario extends Funcionario{
 		this.login = login;
 		this.senha = hashSenha(senha);
 		this.tipo = 1;
-		escreverArquivo(this);
 	}
 	
 	@Override
