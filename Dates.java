@@ -12,12 +12,14 @@ import java.util.TreeMap;
 public class Dates {
 
 	Map<LocalDate,Integer> m1 = new TreeMap<LocalDate,Integer>();
+	Map<String,Double> m2 = new TreeMap<String,Double>();
 	boolean matricula=false;
 	int inicio=1;
 	int fim=-1;
 	int totaldias=-1;
 	double valorinfantil=-1;
 	double valorfundamental=-1;
+	double valorintegral=-1;
 	double valormatriculainfant=-1;
 	double valormatriculafundam=-1;
 	
@@ -39,8 +41,21 @@ public class Dates {
 		valormatriculainfant=Double.parseDouble(scan2.next());
 		valorfundamental=Double.parseDouble(scan2.next());
 		valormatriculafundam=Double.parseDouble(scan2.next());
+		valorintegral=Double.parseDouble(scan2.next());
+		in = new BufferedReader(new FileReader("cursos.txt"));
+		Scanner scan3=new Scanner(in);
+		while (scan3.hasNext()){
+			m2.put(scan3.next(),Double.parseDouble(scan3.next()));
+		}
 		scan1.close();
 		scan2.close();
+		scan3.close();
+	}
+	
+	///Apenas para testes
+	public void mostraMapa (){
+		System.out.println(m2.keySet());
+		System.out.println(m2.values());
 	}
 	
 	///Apenas para testes
@@ -52,6 +67,16 @@ public class Dates {
 		System.out.println("inicio "+inicio);
 		System.out.println("fim "+fim);
 		System.out.println("totaldias "+totaldias);
+		
+	}
+	
+	///get do valor
+	public double valor (int tipo){
+		if (tipo==1)
+			return valorinfantil;
+		else if (tipo==2)
+			return valorfundamental;
+		return -1;
 	}
 	
 	///Apenas para arredondar o valor final da funcao
@@ -154,9 +179,9 @@ public class Dates {
 		public void atualizarMatricula(boolean s){
 			matricula=s;
 		}
-	
+		
 	///Calcula valor com data de termino fora do padrao
-	public double valorProporcionalDataFim (int dia, int mes, int tipo) throws InterruptedException{
+	public double valorProporcional (int dia, int mes, int tipo, boolean termino) throws InterruptedException{
 		int ndias=-1;
 		LocalDate data = LocalDate.now();
 		double total=0;
@@ -171,18 +196,27 @@ public class Dates {
 		if (String.valueOf(dia).length()==1)
 			aux+="0";
 		aux+=dia;
-		ndias=this.achaDataFim(aux);
+		if (termino)
+			ndias=this.achaDataFim(aux);
+		else
+			ndias=this.achaDataComeco(aux);
 		if (ndias==-1){
 			teclado.close();
 			return -1;
 		}
 		if (tipo==1){
-			total+=(ndias-inicio+1)*(valorinfantil*12/totaldias);
+			if (termino)
+				total+=(ndias-inicio+1)*(valorinfantil*12/totaldias);
+			else
+				total+=(fim-ndias+1)*(valorinfantil*12/totaldias);
 			if (matricula)
 				total+=valormatriculainfant;
 		}
-		if (tipo==2){
-			total+=(ndias-inicio+1)*(valorfundamental*12/totaldias);
+		else if (tipo==2){
+			if (termino)
+				total+=(ndias-inicio+1)*(valorfundamental*12/totaldias);
+			else
+				total+=(fim-ndias+1)*(valorfundamental*12/totaldias);
 			if (matricula)
 				total+=valormatriculafundam;
 		}
@@ -191,39 +225,21 @@ public class Dates {
 		return total;
 	}
 	
-	///Calcula valor com data de comeco fora do padrao
-	public double valorProporcionalDataComeco (int dia, int mes, int tipo) throws InterruptedException{
-		int ndias=-1;
-		LocalDate data = LocalDate.now();
-		double total=0;
-		String aux="";
-		Scanner teclado = new Scanner(System.in);
-		aux=(Integer.toString(data.getYear()));
-		aux+="-";
-		if (String.valueOf(mes).length()==1)
-			aux+="0";	
-		aux+=mes;
-		aux+="-";
-		if (String.valueOf(dia).length()==1)
-			aux+="0";
-		aux+=dia;
-		ndias=this.achaDataComeco(aux);
-		if (ndias==-1){
-			teclado.close();
-			return -1;
-		}
-		if (tipo==1){
-			total+=(fim-ndias+1)*(valorinfantil*12/totaldias);
-			if (matricula)
-				total+=valormatriculainfant;
-		}
-		if (tipo==2){
-			total+=(fim-ndias+1)*(valorfundamental*12/totaldias);
-			if (matricula)
-				total+=valormatriculafundam;
-		}
-		total=round(total,2);
-		teclado.close();
-		return total;
+	///Calcula quantas parcelas inteiras
+	public int quantasInteiras (double s, int tipo){
+		if (tipo==1)
+			return (int)(s/valorinfantil);
+		else if (tipo==2)
+			return (int)(s/valorfundamental);
+		return -1;
+	}
+	
+	///Calcula o valor da parcela proporcional
+	public double valorParcelaProporcional (double s, int tipo){
+		if (tipo==1)
+			return round(s%valorinfantil,2);
+		else if (tipo==2)
+			return round(s%valorfundamental,2);
+		return -1;
 	}
 }

@@ -7,7 +7,9 @@ public class Main {
 		String s="2017-06-22";
 		//wc.atualizarInicio(s);
 		//wc.atualizarFim(s);
-		System.out.println(wc.valorProporcionalDataFim(22,06,2));
+		System.out.println(wc.valorProporcional(22,06,2,false));
+		System.out.println(wc.quantasInteiras(wc.valorProporcional(22,06,2,false),2));
+		System.out.println(wc.valorParcelaProporcional(wc.valorProporcional(22,06,2,false),2));
 	}
 
 }
