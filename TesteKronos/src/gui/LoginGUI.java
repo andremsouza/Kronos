@@ -37,7 +37,7 @@ public class LoginGUI {
 	public int ftteste(String us, String pw) {
 		String us1 = "vitor";
 		String pw1 = "9791285";
-		if(us.compareTo(us1) == 0 && pw.compareTo(pw1) == 0) return 3;
+		if(us.compareTo(us1) == 0 && pw.compareTo(pw1) == 0) return 1;
 		return -1;
 	}
 
