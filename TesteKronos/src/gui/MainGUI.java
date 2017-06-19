@@ -94,7 +94,6 @@ public class MainGUI extends JFrame {
 		menuBar.add(mnGerenciar);
 
 		JMenuItem mntmCursos = new JMenuItem("Cursos");
-		mntmCursos.setEnabled(privileges >= 2);
 		mntmCursos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Curso cs = new Curso(privileges);
@@ -104,7 +103,6 @@ public class MainGUI extends JFrame {
 		mnGerenciar.add(mntmCursos);
 
 		JMenuItem mntmDatasEValores = new JMenuItem("Valores");
-		mntmDatasEValores.setEnabled(privileges >= 2);
 		mntmDatasEValores.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Atualizar at = new Atualizar(privileges);

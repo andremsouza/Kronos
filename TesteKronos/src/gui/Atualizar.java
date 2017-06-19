@@ -152,7 +152,7 @@ public class Atualizar extends JFrame {
 	        	JComponent component = (JComponent)e.getComponent();
 	        	((JComponent)component.getParent().getParent().getParent().getParent()).scrollRectToVisible(component.getParent().getParent().getParent().getBounds());
 	        }
-	        public void focusLost( FocusEvent e ) {}
+	        public void focusLost(FocusEvent e) {}
 	    };
 		
 		hTFValoresMatInf = new HintTextField();
@@ -179,6 +179,14 @@ public class Atualizar extends JFrame {
 		hTFValoresInt.setValorHint();
 		hTFValoresInt.setColumns(10);
 		hTFValoresInt.addFocusListener(flhTF);
+		
+		if(privileges == 1) { // funcionario nao pode alterar
+			hTFValoresMatInf.setEnabled(false);
+			hTFValoresMatFund.setEnabled(false);
+			hTFValoresParcInf.setEnabled(false);
+			hTFValoresParcFund.setEnabled(false);
+			hTFValoresInt.setEnabled(false);
+		}
 		/* Fim HintTextField */
 
 		/* Inicializa JButton */
@@ -395,8 +403,9 @@ public class Atualizar extends JFrame {
         this.getRootPane().setDefaultButton(btnAtt);
 		title = "Kronos - Atualizar Valores/Datas(";
 		switch(privileges) {
-			case 2:	title += "Diretor";	break;
-			case 3:	title += "ADMIN";	break;
+			case 1:	title += "Funcionário";	break;
+			case 2:	title += "Diretor";		break;
+			case 3:	title += "ADMIN";		break;
 		}
 		title += ")";
 		setTitle(title);

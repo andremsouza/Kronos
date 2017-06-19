@@ -180,7 +180,7 @@ public class Contas extends JFrame {
 							adm.criaSecretario(login, senha);
 							break;
 						case 2:
-							adm.criaSecretario(login, senha);
+							adm.criaDiretor(login, senha);
 							break;
 						case 3:
 							adm.criaAdmin(login, senha);
