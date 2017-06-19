@@ -77,7 +77,7 @@ public class LoignGUI extends JFrame {
 					JOptionPane.showMessageDialog(null, "Usuário/senha incorreto", "Erro", JOptionPane.ERROR_MESSAGE);
 				} else {
 					dispose();
-					ProgramFrame pf = new ProgramFrame(privileges);
+					MainGUI pf = new MainGUI(privileges);
 					pf.setVisible(true);
 				}
 			}

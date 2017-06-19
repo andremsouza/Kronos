@@ -166,7 +166,13 @@ public class Contas extends JFrame {
 				int privileges = comboBoxAdd.getSelectedIndex() + 1;
 				String login = tFAddUsuario.getText();
 				String senha = tFAddSenha.getText();
-				if(login.length() < 4 || senha.length() < 4) {
+				int i, rowCount;
+				rowCount = ((DefaultTableModel) table.getModel()).getRowCount();
+				i = rowCount;
+				for(i = 0; i < rowCount; i++) if(((String)((DefaultTableModel)table.getModel()).getValueAt(i, 0)).compareTo(login) == 0) break;
+				if(i != rowCount) {
+					JOptionPane.showMessageDialog(null, "Este usuário já existe, escolha outro.", "Erro", JOptionPane.ERROR_MESSAGE);
+				} else if(login.length() < 4 || senha.length() < 4) {
 					JOptionPane.showMessageDialog(null, "Usuários/senhas precisam ter no mínimo 4 caracteres.", "Erro", JOptionPane.ERROR_MESSAGE);	
 				} else {
 					switch(privileges) {
@@ -401,7 +407,7 @@ public class Contas extends JFrame {
         if(((DefaultTableModel)table.getModel()).getRowCount() * 16 + 384 > bounds.height) setBounds(0,0, 770, bounds.height);
         else setBounds(0,0, 770, ((DefaultTableModel)table.getModel()).getRowCount() * 16 + 384);
 		this.setTitle("Kronos - Gerenciamento de Contas(ADMIN)");
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		/* Se mudar o estado da janela, atualiza o tamanho dos JTextField */
 		addWindowStateListener(new WindowStateListener() {

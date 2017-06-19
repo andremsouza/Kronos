@@ -29,6 +29,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
 import java.awt.event.FocusListener;
 import java.awt.event.FocusEvent;
+import operations.Dates;
 
 public class Curso extends JFrame {
 	private static final long serialVersionUID = 2595819290806678181L;
@@ -48,9 +49,9 @@ public class Curso extends JFrame {
 	private JButton btnEdit;
 	private JButton btnRem;
 	private JTextField tFAddCurso;
-	private JTextField tFAddValor;
+	private HintTextField tFAddValor;
 	private JTextField tFEditCurso;
-	private JTextField tFEditValor;
+	private HintTextField tFEditValor;
 	private JTextField tFRemCurso;
 	private JPanel contentPane;
 	private JPanel panelFunctions;
@@ -67,7 +68,8 @@ public class Curso extends JFrame {
 	private JPanel panelTable;
 	private JPanel panelTop;
 	private String title;
-
+	private Dates operations;
+	
 	/* Atualiza o tamanho dos componentes de acordo com o tamanho da janela */
 	private void resizeComponents() {
 		Rectangle frameRect;
@@ -90,10 +92,14 @@ public class Curso extends JFrame {
 	 * Construtor.
 	 */
 	public Curso(int privileges) {
-		/* Chama a função do Igor para pegar os cursos e define o número de cursos para definir o tamanho inicial da janela */
+		try {
+			operations = new Dates();
+		} catch(Exception e) {
+			
+		}
 		initialize(privileges);	
 	}
-
+	
 	/**
 	 * Inicializa as variáveis.
 	 */
@@ -145,17 +151,33 @@ public class Curso extends JFrame {
 		btnAdd.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String curso = tFAddCurso.getText();
+				String curso = tFAddCurso.getText().toLowerCase();
 				String valor = tFAddValor.getText();
-				if(curso.length() < 3 || valor.length() < 3) {
+				int i , rowCount;
+				rowCount = ((DefaultTableModel) table.getModel()).getRowCount();
+				i = rowCount;
+				if(curso.length() != 0)
+					for(i = 0; i < rowCount; i++)
+						if(((String)((DefaultTableModel)table.getModel()).getValueAt(i, 0)).compareTo(curso) == 0) break;
+				if(i != rowCount) {
+					JOptionPane.showMessageDialog(null, "Curso já existe.", "Erro", JOptionPane.ERROR_MESSAGE);
+				} else if(curso.length() < 3) {
 					JOptionPane.showMessageDialog(null, "Curso precisa ter no mínimo 3 caracteres.", "Erro", JOptionPane.ERROR_MESSAGE);
+				} else if(valor.length() == 0 || tFAddValor.showingHint() || !tFAddValor.checaValor()) {
+					JOptionPane.showMessageDialog(null, "Valor mal formatado.", "Erro", JOptionPane.ERROR_MESSAGE);	
 				} else {
-					/* Função do Igor - addCurso */
+					operations.adicionaCurso (curso, Double.parseDouble(valor.replace(',', '.')));
 					JOptionPane.showMessageDialog(null, "Curso '" + curso + "' criado com sucesso.", "Operação sucedida", JOptionPane.INFORMATION_MESSAGE);
 					String[] newRow = {curso, valor};
 					((DefaultTableModel) table.getModel()).addRow(newRow);
 					tFAddCurso.setText("");
-					tFAddValor.setText("");
+					tFAddValor.showHint();
+				}
+				
+				try {
+					operations.fimDePrograma();
+				} catch(Exception f) {
+					
 				}
 			}
 		});
@@ -164,21 +186,26 @@ public class Curso extends JFrame {
 		btnEdit.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String curso = tFEditCurso.getText();
+				String curso = tFEditCurso.getText().toLowerCase();
 				String novoValor = tFEditValor.getText();
 				int i, rowCount;
 				rowCount = ((DefaultTableModel) table.getModel()).getRowCount();
 				for(i = 0; i < rowCount; i++) if(((String)((DefaultTableModel)table.getModel()).getValueAt(i, 0)).compareTo(curso) == 0) break;
 				if(i == rowCount) {
-					JOptionPane.showMessageDialog(null, "Curso inexistente.", "Erro", JOptionPane.ERROR_MESSAGE);	
-				} else if(novoValor.length() < 3) {
-					JOptionPane.showMessageDialog(null, "Número inválido.", "Erro", JOptionPane.ERROR_MESSAGE);	
+					JOptionPane.showMessageDialog(null, "Curso inexistente.", "Erro", JOptionPane.ERROR_MESSAGE);
+				} else if(novoValor.length() == 0 || tFEditValor.showingHint() || !tFEditValor.checaValor()) {
+						JOptionPane.showMessageDialog(null, "Valor mal formatado.", "Erro", JOptionPane.ERROR_MESSAGE);	
 				} else {
-					// Função do Igor de editar curso
+					operations.adicionaCurso(curso, Double.parseDouble(novoValor.replace(',', '.')));
 					JOptionPane.showMessageDialog(null, "Curso '" + curso + "' editado com sucesso.", "Operação sucedida", JOptionPane.INFORMATION_MESSAGE);
 					((DefaultTableModel) table.getModel()).setValueAt(novoValor, i, 1);
 					tFEditCurso.setText("");
-					tFEditValor.setText("");
+					tFEditValor.showHint();
+				}
+				try {
+					operations.fimDePrograma();
+				} catch(Exception f) {
+					
 				}
 			}
 		});
@@ -187,41 +214,70 @@ public class Curso extends JFrame {
 		btnRem.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnRem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String curso = tFRemCurso.getText();
+				String curso = tFRemCurso.getText().toLowerCase();
 				int i, rowCount;
 				rowCount = ((DefaultTableModel) table.getModel()).getRowCount();
 				for(i = 0; i < rowCount; i++) if(((String)((DefaultTableModel)table.getModel()).getValueAt(i, 0)).compareTo(curso) == 0) break;
 				if(i == rowCount) {
 					JOptionPane.showMessageDialog(null, "Curso inexistente.", "Erro", JOptionPane.ERROR_MESSAGE);
 				} else {
-					// Funcao do Igor para remover curso
+					operations.RemoveCurso(curso);
 					JOptionPane.showMessageDialog(null, "Curso '" + curso + "' removido com sucesso.", "Operação sucedida", JOptionPane.INFORMATION_MESSAGE);
 					((DefaultTableModel) table.getModel()).removeRow(i);
 					tFRemCurso.setText("");
+				}
+				
+				try {
+					operations.fimDePrograma();
+				} catch(Exception f) {
+					
 				}
 			}
 		});
 		/* Fim JButton */
 		
 		/* Inicializa JTextField */
-		tFAddCurso = new JTextField();
-		tFAddCurso.addFocusListener(new FocusListener() { public void focusGained(FocusEvent e) { getRootPane().setDefaultButton(btnAdd); } public void focusLost(FocusEvent e) {}});
+		FocusListener flAdd = new FocusListener() {
+			public void focusGained(FocusEvent e) {
+				getRootPane().setDefaultButton(btnAdd);
+			}
+			public void focusLost(FocusEvent e) {}
+		};
 		
-		tFAddValor = new JTextField();
-		tFAddValor.addFocusListener(new FocusListener() { public void focusGained(FocusEvent e) { getRootPane().setDefaultButton(btnAdd); } public void focusLost(FocusEvent e) {}});
+		FocusListener flEdit = new FocusListener() {
+			public void focusGained(FocusEvent e) {
+				getRootPane().setDefaultButton(btnEdit);
+			}
+			public void focusLost(FocusEvent e) {}
+		};
+		
+		FocusListener flRem = new FocusListener() {
+			public void focusGained(FocusEvent e) {
+				getRootPane().setDefaultButton(btnRem);
+			}
+			public void focusLost(FocusEvent e) {}
+		};
+		
+		tFAddCurso = new JTextField();
+		tFAddCurso.addFocusListener(flAdd);
+		
+		tFAddValor = new HintTextField();
+		tFAddValor.setValorHint();
+		tFAddValor.addFocusListener(flAdd);
 		
 		tFEditCurso = new JTextField();
-		tFEditCurso.addFocusListener(new FocusListener() { public void focusGained(FocusEvent e) { getRootPane().setDefaultButton(btnEdit); } public void focusLost(FocusEvent e) {}});
+		tFEditCurso.addFocusListener(flEdit);
 		
-		tFEditValor = new JTextField();
-		tFEditValor.addFocusListener(new FocusListener() { public void focusGained(FocusEvent e) { getRootPane().setDefaultButton(btnEdit); } public void focusLost(FocusEvent e) {}});
+		tFEditValor = new HintTextField();
+		tFEditValor.setValorHint();
+		tFEditValor.addFocusListener(flEdit);
 		
 		tFRemCurso = new JTextField();
-		tFRemCurso.addFocusListener(new FocusListener() { public void focusGained(FocusEvent e) { getRootPane().setDefaultButton(btnRem); } public void focusLost(FocusEvent e) {}});
+		tFRemCurso.addFocusListener(flRem);
 		/* Fim JTextField */
 
 		/* Inicializa JTable */
-		table = new JTable(new DefaultTableModel(/* Igor.retornaCursos()*/new Object[][]{{"kung fu", "inf"}, {"debbuging", "10000000000,00"}}, new Object[]{"Curso", "Valor"}));
+		table = new JTable(new DefaultTableModel(operations.getCursos(), new Object[]{"Curso", "Valor"}));
 		table.setAutoCreateRowSorter(true);
 		table.setEnabled(false);
 		/* Fim JTable */
@@ -308,7 +364,7 @@ public class Curso extends JFrame {
 		
 		/* Inicializa JFrame */
 		this.setMinimumSize(new Dimension(770, 329));
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setContentPane(contentPane);
 		GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
         Rectangle bounds = env.getMaximumWindowBounds();
@@ -338,6 +394,7 @@ public class Curso extends JFrame {
 	/**
 	 * Teste essa porra.
 	 */
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -349,5 +406,6 @@ public class Curso extends JFrame {
 				}
 			}
 		});
+
 	}
 }
