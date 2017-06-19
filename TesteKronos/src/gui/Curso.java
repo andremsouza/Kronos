@@ -155,6 +155,7 @@ public class Curso extends JFrame {
 		/* Inicializa JButton */
 		btnAdd = new JButton("Adicionar");
 		btnAdd.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		if(privileges != 1)
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String curso = tFAddCurso.getText().toLowerCase();
@@ -190,6 +191,7 @@ public class Curso extends JFrame {
 
 		btnEdit = new JButton("Editar");
 		btnEdit.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		if(privileges != 1)
 		btnEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String curso = tFEditCurso.getText().toLowerCase();
@@ -218,6 +220,7 @@ public class Curso extends JFrame {
 	
 		btnRem = new JButton("Remover");
 		btnRem.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		if(privileges != 1)
 		btnRem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String curso = tFRemCurso.getText().toLowerCase();

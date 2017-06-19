@@ -192,6 +192,7 @@ public class Atualizar extends JFrame {
 		/* Inicializa JButton */
 		btnAtt = new JButton("Atualizar");
 		btnAtt.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		if(privileges != 1)
 		btnAtt.addFocusListener(new FocusListener() {
 			public void focusGained(FocusEvent e) {
 	        	JComponent component = (JComponent)e.getComponent();
@@ -199,6 +200,7 @@ public class Atualizar extends JFrame {
 	        }
 	        public void focusLost(FocusEvent e) {}
 		});
+		if(privileges != 1)
 		btnAtt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				/* Checa cada um dos JTextFields */
