@@ -175,7 +175,7 @@ public class Curso extends JFrame {
 				} else {
 					operations.adicionaCurso (curso, Double.parseDouble(valor.replace(',', '.')));
 					JOptionPane.showMessageDialog(null, "Curso '" + curso + "' criado com sucesso.", "Operação sucedida", JOptionPane.INFORMATION_MESSAGE);
-					String[] newRow = {curso, valor};
+					Object[] newRow = {curso, new Double(Double.parseDouble(valor.replace(',', '.')))};
 					((DefaultTableModel) table.getModel()).addRow(newRow);
 					tFAddCurso.setText("");
 					tFAddValor.showHint();
@@ -206,7 +206,7 @@ public class Curso extends JFrame {
 				} else {
 					operations.adicionaCurso(curso, Double.parseDouble(novoValor.replace(',', '.')));
 					JOptionPane.showMessageDialog(null, "Curso '" + curso + "' editado com sucesso.", "Operação sucedida", JOptionPane.INFORMATION_MESSAGE);
-					((DefaultTableModel) table.getModel()).setValueAt(novoValor, i, 1);
+					((DefaultTableModel) table.getModel()).setValueAt(new Double(Double.parseDouble(novoValor.replace(',', '.'))), i, 1);
 					tFEditCurso.setText("");
 					tFEditValor.showHint();
 				}
@@ -446,7 +446,7 @@ public class Curso extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Curso frame = new Curso(1);
+					Curso frame = new Curso(3);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();

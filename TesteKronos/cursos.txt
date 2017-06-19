@@ -8,5 +8,3 @@ danca
 4.0
 futebol
 3.0
-judo
-1.0
