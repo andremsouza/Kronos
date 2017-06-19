@@ -68,9 +68,6 @@ public class LoignGUI extends JFrame {
 		btnEntrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int privileges;
-				
-				//privileges = Funcionario.validaUsuario(username.getText(), String.valueOf(password.getPassword()));
-					
 				Admin adm = new Admin(username.getText(), String.valueOf(password.getPassword()));
 				privileges = adm.validaUsuario(username.getText(), String.valueOf(password.getPassword()));
 				if(privileges == -1) {

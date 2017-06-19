@@ -438,10 +438,6 @@ public class Curso extends JFrame {
 		/* Fim JFrame */
 	}
 	
-	/**
-	 * Teste essa porra.
-	 */
-	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {

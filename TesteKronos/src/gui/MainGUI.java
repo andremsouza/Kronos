@@ -331,10 +331,8 @@ public class MainGUI extends JFrame {
 		textField.setHorizontalAlignment(SwingConstants.CENTER);
 		contentPane.add(textField, "cell 0 7,growx");
 		textField.setColumns(10);
-		this.setResizable(false);
 	}
 
-	/* Testar */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {

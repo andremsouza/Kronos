@@ -426,10 +426,7 @@ public class Contas extends JFrame {
 			}
 		});
 	}
-	
-	/**
-	 * Teste sah porra
-	 */
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
