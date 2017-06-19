@@ -181,7 +181,7 @@ public class Dates {
 		}
 		
 	///Calcula valor com data de termino fora do padrao
-	public double valorProporcional (int dia, int mes, int tipo, boolean termino, boolean integral) throws InterruptedException{
+	public double valorProporcional (int dia, int mes, int tipo, boolean termino, boolean integral, boolean matricula) {
 		int ndias=-1;
 		LocalDate data = LocalDate.now();
 		double total=0;
@@ -262,6 +262,24 @@ public class Dates {
 			else
 				return round(s%valorfundamental,2);
 		return -1;
+	}
+	
+	public double valorParcelaInteira (int tipo, boolean integral){
+		if (tipo==1)
+			if (integral)
+				return valorinfantil+valorintegral;
+			else
+				return valorinfantil;
+		else if (tipo==2)
+			if (integral)
+				return valorfundamental+valorintegral;
+			else
+				return valorfundamental;
+		return -1;
+	}
+	
+	public double valorTotalParcelaInteira (int q, double v){
+		return q*v;
 	}
 	
 	///Adiciona curso novo e tambem atualiza valor de algum curso

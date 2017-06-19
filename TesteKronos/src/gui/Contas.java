@@ -279,10 +279,10 @@ public class Contas extends JFrame {
 				rowCount = ((DefaultTableModel) table.getModel()).getRowCount();
 				for(i = 0; i < rowCount; i++) if(((String)((DefaultTableModel)table.getModel()).getValueAt(i, 0)).compareTo(tFEditUsuario.getText()) == 0) break;
 				if(i != rowCount) {
-					if(((String)((DefaultTableModel)table.getModel()).getValueAt(i, 2)).compareTo("Secretaria") == 0) {
-						lblEditPrivileges.setText("Secretaria");
-					} else if(((String)((DefaultTableModel)table.getModel()).getValueAt(i, 2)).compareTo("Diretoria") == 0) {
-						lblEditPrivileges.setText("Diretoria");
+					if(((String)((DefaultTableModel)table.getModel()).getValueAt(i, 2)).compareTo("Funcionario") == 0) {
+						lblEditPrivileges.setText("Funcionario");
+					} else if(((String)((DefaultTableModel)table.getModel()).getValueAt(i, 2)).compareTo("Diretor") == 0) {
+						lblEditPrivileges.setText("Diretor");
 					} else if(((String)((DefaultTableModel)table.getModel()).getValueAt(i, 2)).compareTo("Admin") == 0) {
 						lblEditPrivileges.setText("Admin");
 					}
@@ -311,8 +311,8 @@ public class Contas extends JFrame {
 
 		/* Inicializa JComboBox */
 		cBPrivileges = new Vector<String>(3);
-		cBPrivileges.add("Secretaria");
-		cBPrivileges.add("Diretoria");
+		cBPrivileges.add("Funcionario");
+		cBPrivileges.add("Diretor");
 		cBPrivileges.add("Admin");
 		comboBoxAdd = new JComboBox<String>(cBPrivileges);
 		comboBoxAdd.addFocusListener(new FocusListener() { public void focusGained(FocusEvent e) { getRootPane().setDefaultButton(btnAdd); } public void focusLost(FocusEvent e) {}});

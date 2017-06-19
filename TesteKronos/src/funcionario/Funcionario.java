@@ -18,7 +18,7 @@ import java.nio.file.*;
 abstract class Funcionario implements Serializable{
 	protected String login;
 	protected String senha;
-	protected int tipo; // '1' para Secretario, '2' para Diretor, '3' para Administrador
+	protected int tipo; // '1' para Funcionario, '2' para Diretor, '3' para Administrador
 	static Set<Funcionario> funcionarios = new LinkedHashSet<Funcionario>();
 	private static final long serialVersionUID = 1L;
 	
@@ -80,7 +80,7 @@ abstract class Funcionario implements Serializable{
 	 * Usada na verificação do login
 	 * @param tlogin é o login a ser testado
 	 * @param tsenha é a senha a ser testada
-	 * @return '-1' se as informações não são coerentes, '1' se for um secretário, '2' se for um diretor ou '3' se for admin
+	 * @return '-1' se as informações não são coerentes, '1' se for um funcionario, '2' se for um diretor ou '3' se for admin
 	 */
 	public int validaUsuario(String tlogin, String tsenha){
 		int tipo = -1;
@@ -162,8 +162,8 @@ abstract class Funcionario implements Serializable{
 			Contas[contador][0] = funcionario.login;
 			Contas[contador][1] = funcionario.senha;
 			switch(funcionario.tipo) {
-				case 1:	Contas[contador][2] = "Secretaria";	break;
-				case 2:	Contas[contador][2] = "Diretoria";	break;
+				case 1:	Contas[contador][2] = "Funcionario";	break;
+				case 2:	Contas[contador][2] = "Diretor";	break;
 				case 3:	Contas[contador][2] = "Admin";		break;
 			}
 			contador++;

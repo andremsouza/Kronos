@@ -5,7 +5,10 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.text.NumberFormatter;
 import javax.swing.JTable;
 import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
@@ -24,6 +27,9 @@ import java.awt.event.ComponentListener;
 import java.awt.Rectangle;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowStateListener;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.Locale;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
@@ -274,10 +280,47 @@ public class Curso extends JFrame {
 		
 		tFRemCurso = new JTextField();
 		tFRemCurso.addFocusListener(flRem);
+		
+		if(privileges == 1) { // Funcionario nao poderam alterar cursos, apenas ver
+			tFAddCurso.setEnabled(false);
+			tFAddValor.setEnabled(false);
+			tFEditCurso.setEnabled(false);
+			tFEditValor.setEnabled(false);
+			tFRemCurso.setEnabled(false);
+		}
 		/* Fim JTextField */
 
 		/* Inicializa JTable */
-		table = new JTable(new DefaultTableModel(operations.getCursos(), new Object[]{"Curso", "Valor"}));
+		table = new JTable(new DefaultTableModel(operations.getCursos(), new Object[]{"Curso", "Valor"})) {
+			private static final long serialVersionUID = 1L;
+			private DefaultTableCellRenderer formatadorMoeda = new DefaultTableCellRenderer() {
+				private static final long serialVersionUID = 1L;
+				@Override
+				protected void setValue(Object o) {
+					String dataFormatada = "";
+					NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("PT", "BR"));
+					NumberFormatter nff = new NumberFormatter(nf);
+					try {
+						dataFormatada = nff.valueToString(o);
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+					super.setValue(dataFormatada);
+				}
+			};
+			@Override
+			public TableCellRenderer getCellRenderer(int row, int column) {
+				if (column==1) return formatadorMoeda;
+				return super.getCellRenderer(row, column);
+			}
+			@Override
+			public Class<?> getColumnClass(int columnIndex) {
+				if (columnIndex==0) return String.class;
+				if (columnIndex==1) return Double.class;
+				if (columnIndex==2) return null;
+				return null;
+			}
+		};
 		table.setAutoCreateRowSorter(true);
 		table.setEnabled(false);
 		/* Fim JTable */
@@ -383,8 +426,9 @@ public class Curso extends JFrame {
 		/* Diferença entre privilégios(Título) */
 		title = "Kronos - Gerenciamento de Cursos(";
 		switch(privileges) {
-			case 2:	title += "Diretor";	break;
-			case 3:	title += "ADMIN";	break;
+			case 1:	title += "Funcionário";	break;
+			case 2:	title += "Diretor";		break;
+			case 3:	title += "ADMIN";		break;
 		}
 		title += ")";
 		setTitle(title);
@@ -399,7 +443,7 @@ public class Curso extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Curso frame = new Curso(3);
+					Curso frame = new Curso(1);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();

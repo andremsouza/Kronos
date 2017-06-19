@@ -43,7 +43,7 @@ public class LoignGUI extends JFrame {
 	private void initialize() {
 		
 		/* Inicializa as JLabel */
-		lblLogin = new JLabel("Login Kronos");
+		lblLogin = new JLabel("Login");
 		lblLogin.setHorizontalAlignment(SwingConstants.CENTER);
 		lblLogin.setFont(new Font("Tahoma", Font.PLAIN, 30));
 		

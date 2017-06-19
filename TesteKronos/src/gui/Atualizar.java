@@ -96,7 +96,7 @@ public class Atualizar extends JFrame {
 		valorInt = operations.valor(3);
 		initialize(privileges);
 	}
-	
+
 	private String doubleToString(double x) {
 		String d = "";
 		d += ((int)x);
@@ -264,8 +264,7 @@ public class Atualizar extends JFrame {
 		});
 		/* Fim JButton */
 
-		/* Inicializa JPanel */		
-
+		/* Inicializa JPanel */
 		panelValoresInfantilMatAtual = new JPanel();
 		((FlowLayout) panelValoresInfantilMatAtual.getLayout()).setAlignment(FlowLayout.LEADING);
 		panelValoresInfantilMatAtual.add(lblMatInfAtual);
@@ -392,7 +391,6 @@ public class Atualizar extends JFrame {
 		contentPane.add(scrollPane);
 		this.setContentPane(contentPane);
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
         this.setMinimumSize(new Dimension(400, 400));
         this.getRootPane().setDefaultButton(btnAtt);
 		title = "Kronos - Atualizar Valores/Datas(";
