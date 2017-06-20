@@ -39,7 +39,7 @@ public class Admin extends Funcionario {
 	 */
 	public boolean armazenaUsuario(Funcionario d) {
 		try {
-			File file = new File("data");
+			File file = new File("src/data");
 
 			// Verifica se o arquivo de dados existe e caso não exista, o
 			// arquivo é criado e inicializado
@@ -141,7 +141,7 @@ public class Admin extends Funcionario {
 		}
 
 		// Insere a mudança no arquivo "data"
-		File file = new File("data");
+		File file = new File("src/data");
 		try {
 			FileOutputStream f = new FileOutputStream(file);
 			ObjectOutputStream o = new ObjectOutputStream(f);
@@ -187,7 +187,7 @@ public class Admin extends Funcionario {
 		}
 
 		// Insere a mudança no arquivo "data"
-		File file = new File("data");
+		File file = new File("src/data");
 		try {
 			FileOutputStream f = new FileOutputStream(file);
 			ObjectOutputStream o = new ObjectOutputStream(f);

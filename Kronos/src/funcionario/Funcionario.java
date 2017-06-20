@@ -35,7 +35,7 @@ public class Funcionario implements Serializable {
 	 */
 	public static void escreverLog(String texto) {
 		try {
-			String filename = "log";
+			String filename = "src/log";
 			FileWriter fw = new FileWriter(filename, true); // true vai escrever
 			// no fim do arquivo
 			fw.write(texto + "\n"); // escreve no fim do arquivo
@@ -96,7 +96,7 @@ public class Funcionario implements Serializable {
 	static Set<Funcionario> leDados() {
 		Set<Funcionario> Tfuncionarios;
 		try {
-			FileInputStream fi = new FileInputStream(new File("data"));
+			FileInputStream fi = new FileInputStream(new File("src/data"));
 			ObjectInputStream oi = new ObjectInputStream(fi);
 			Tfuncionarios = (Set<Funcionario>) oi.readObject();
 
@@ -123,13 +123,13 @@ public class Funcionario implements Serializable {
 	 */
 	static void verificaArquivo() {
 		try {
-			Path path = Paths.get("data");
+			Path path = Paths.get("src/data");
 
 			// Se o arquivo não existe ainda, criamos e inserimos o admin
 			if (Files.notExists(path)) {
 				Admin adm = new Admin("admin", "adm123");
 				funcionarios.add(adm);
-				FileOutputStream f = new FileOutputStream(new File("data"));
+				FileOutputStream f = new FileOutputStream(new File("src/data"));
 				ObjectOutputStream o = new ObjectOutputStream(f);
 
 				o.writeObject(funcionarios);

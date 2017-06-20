@@ -3,7 +3,6 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -33,23 +32,6 @@ import operations.Dates;
  */
 public class Atualizar extends JFrame {
 	private static final long serialVersionUID = 7011304046253879959L;
-
-	/**
-	 * Apenas para testes.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					Atualizar frame = new Atualizar(2);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	private JLabel lblValores;
 	private JLabel lblMatInf;

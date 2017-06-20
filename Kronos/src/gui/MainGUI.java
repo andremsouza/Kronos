@@ -1,7 +1,6 @@
 package gui;
 
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -45,22 +44,6 @@ import operations.Dates;
 public class MainGUI extends JFrame {
 
 	private static final long serialVersionUID = 4209509555981548583L;
-	/**
-	 * Apenas para testes.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					MainGUI window = new MainGUI(3);
-					window.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	private JPanel contentPane;
 	private final ButtonGroup buttonGroupCat = new ButtonGroup();
@@ -89,7 +72,7 @@ public class MainGUI extends JFrame {
 		setFont(new Font("Tahoma", Font.PLAIN, 11));
 		// this.privileges = privileges;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 710, 390);
+		setBounds(100, 100, 800, 400);
 
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -163,7 +146,7 @@ public class MainGUI extends JFrame {
 
 		JPanel panelCategoria = new JPanel();
 		panelCategoria
-				.setBorder(new TitledBorder(null, "Categoria", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		.setBorder(new TitledBorder(null, "Categoria", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panelParam.add(panelCategoria, "cell 0 0,grow");
 		panelCategoria.setLayout(new MigLayout("", "[98px,grow,fill]", "[24px][24px]"));
 
@@ -313,71 +296,71 @@ public class MainGUI extends JFrame {
 
 		Object[] headers = new Object[] { "", "Quantas", "Valor da Parcela", "Soma das Parcelas" };
 		Object[][] conteudo = new Object[][] { { "Parcelas Inteiras", new Integer(0), new Double(0), new Double(0) },
-				{ "Parcela Proporcional", new Integer(1), new Double(0), new Double(0) } };
+			{ "Parcela Proporcional", new Integer(1), new Double(0), new Double(0) } };
 
-		// contentPane.add(table, "cell 0 4,grow");
-		this.getRootPane().setDefaultButton(btnCalcular);
-		table = new JTable(new DefaultTableModel(conteudo, headers)) {
-			private static final long serialVersionUID = 1L;
-			private DefaultTableCellRenderer formatadorMoeda = new DefaultTableCellRenderer() {
+			// contentPane.add(table, "cell 0 4,grow");
+			this.getRootPane().setDefaultButton(btnCalcular);
+			table = new JTable(new DefaultTableModel(conteudo, headers)) {
 				private static final long serialVersionUID = 1L;
+				private DefaultTableCellRenderer formatadorMoeda = new DefaultTableCellRenderer() {
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					protected void setValue(Object o) {
+						String dataFormatada = "";
+						NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("PT", "BR"));
+						NumberFormatter nff = new NumberFormatter(nf);
+						try {
+							dataFormatada = nff.valueToString(o);
+						} catch (ParseException e) {
+							e.printStackTrace();
+						}
+						super.setValue(dataFormatada);
+					}
+				};
+
+				private DefaultTableCellRenderer formatadorInt = new DefaultTableCellRenderer();
+
+				{
+					formatadorMoeda.setHorizontalAlignment(SwingConstants.LEFT);
+					formatadorInt.setHorizontalAlignment(SwingConstants.LEFT);
+				}
 
 				@Override
-				protected void setValue(Object o) {
-					String dataFormatada = "";
-					NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("PT", "BR"));
-					NumberFormatter nff = new NumberFormatter(nf);
-					try {
-						dataFormatada = nff.valueToString(o);
-					} catch (ParseException e) {
-						e.printStackTrace();
-					}
-					super.setValue(dataFormatada);
+				public TableCellRenderer getCellRenderer(int row, int column) {
+					if (column == 1)
+						return formatadorInt;
+					if ((column == 2 || column == 3))
+						return formatadorMoeda;
+					return super.getCellRenderer(row, column);
+				}
+
+				@Override
+				public Class<?> getColumnClass(int columnIndex) {
+					if (columnIndex == 0)
+						return String.class;
+					if (columnIndex == 1)
+						return Integer.class;
+					if (columnIndex == 2)
+						return Double.class;
+					if (columnIndex == 3)
+						return Double.class;
+					return null;
 				}
 			};
+			table.setEnabled(false);
+			table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
-			private DefaultTableCellRenderer formatadorInt = new DefaultTableCellRenderer();
+			JScrollPane scrollPane = new JScrollPane(table);
+			contentPane.add(scrollPane, "cell 0 3,growx,aligny center");
 
-			{
-				formatadorMoeda.setHorizontalAlignment(SwingConstants.LEFT);
-				formatadorInt.setHorizontalAlignment(SwingConstants.LEFT);
-			}
+			JLabel lblValorProporcionalCompleto = new JLabel("Valor Proporcional Completo");
+			contentPane.add(lblValorProporcionalCompleto, "cell 0 6");
 
-			@Override
-			public TableCellRenderer getCellRenderer(int row, int column) {
-				if (column == 1)
-					return formatadorInt;
-				if ((column == 2 || column == 3))
-					return formatadorMoeda;
-				return super.getCellRenderer(row, column);
-			}
-
-			@Override
-			public Class<?> getColumnClass(int columnIndex) {
-				if (columnIndex == 0)
-					return String.class;
-				if (columnIndex == 1)
-					return Integer.class;
-				if (columnIndex == 2)
-					return Double.class;
-				if (columnIndex == 3)
-					return Double.class;
-				return null;
-			}
-		};
-		table.setEnabled(false);
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-
-		JScrollPane scrollPane = new JScrollPane(table);
-		contentPane.add(scrollPane, "cell 0 3,growx,aligny center");
-
-		JLabel lblValorProporcionalCompleto = new JLabel("Valor Proporcional Completo");
-		contentPane.add(lblValorProporcionalCompleto, "cell 0 6");
-
-		textField = new JTextField();
-		textField.setHorizontalAlignment(SwingConstants.CENTER);
-		contentPane.add(textField, "cell 0 7,growx");
-		textField.setColumns(10);
+			textField = new JTextField();
+			textField.setHorizontalAlignment(SwingConstants.CENTER);
+			contentPane.add(textField, "cell 0 7,growx");
+			textField.setColumns(10);
 	}
 
 }

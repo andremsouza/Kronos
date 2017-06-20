@@ -51,7 +51,7 @@ public class Dates {
 	 */
 	public Dates() throws Exception {
 		BufferedReader in;
-		in = new BufferedReader(new FileReader("datas.txt"));
+		in = new BufferedReader(new FileReader("src/datas.txt"));
 		int i = 0;
 		Scanner scan1 = new Scanner(in);
 		LocalDate data = LocalDate.now();
@@ -61,14 +61,14 @@ public class Dates {
 			m1.put(data, i);
 		}
 		totaldias = fim = i;
-		in = new BufferedReader(new FileReader("valores.txt"));
+		in = new BufferedReader(new FileReader("src/valores.txt"));
 		Scanner scan2 = new Scanner(in);
 		valorinfantil = Double.parseDouble(scan2.next());
 		valormatriculainfant = Double.parseDouble(scan2.next());
 		valorfundamental = Double.parseDouble(scan2.next());
 		valormatriculafundam = Double.parseDouble(scan2.next());
 		valorintegral = Double.parseDouble(scan2.next());
-		in = new BufferedReader(new FileReader("cursos.txt"));
+		in = new BufferedReader(new FileReader("src/cursos.txt"));
 		Scanner scan3 = new Scanner(in);
 		while (scan3.hasNext()) {
 			m2.put(scan3.next(), Double.parseDouble(scan3.next()));
@@ -215,7 +215,7 @@ public class Dates {
 	 * @throws IOException
 	 */
 	public void fimDePrograma() throws IOException {
-		BufferedWriter out = new BufferedWriter(new FileWriter("valores.txt"));
+		BufferedWriter out = new BufferedWriter(new FileWriter("src/valores.txt"));
 		out.write(valorinfantil + "");
 		out.newLine();
 		out.write(valormatriculainfant + "");
@@ -226,7 +226,7 @@ public class Dates {
 		out.newLine();
 		out.write(valorintegral + "");
 		out.close();
-		out = new BufferedWriter(new FileWriter("cursos.txt"));
+		out = new BufferedWriter(new FileWriter("src/cursos.txt"));
 		for (Map.Entry<String, Double> entry : m2.entrySet()) {
 			out.write(entry.getKey() + "");
 			out.newLine();

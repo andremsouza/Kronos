@@ -3,7 +3,6 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
@@ -47,26 +46,6 @@ import operations.Dates;
  */
 public class Curso extends JFrame {
 	private static final long serialVersionUID = 2595819290806678181L;
-
-	/**
-	 * Apenas para testes.
-	 * 
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					Curso frame = new Curso(3);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-
-	}
 
 	private JLabel lblAdd;
 	private JLabel lblAddCurso;

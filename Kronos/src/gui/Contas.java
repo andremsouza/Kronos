@@ -3,7 +3,6 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
@@ -43,25 +42,6 @@ import funcionario.Funcionario;
  */
 public class Contas extends JFrame {
 	private static final long serialVersionUID = -4717353666916235985L;
-
-	/**
-	 * Apenas para testes.
-	 * 
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					Contas frame = new Contas(3);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	private JLabel lblAdd;
 	private JLabel lblAddUsuario;
