@@ -1,0 +1,10 @@
+artes
+5.0
+australopitecus
+352.0
+capoeira
+2.0
+danca
+4.0
+futebol
+3.0

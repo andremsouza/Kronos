@@ -2,43 +2,40 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.io.IOException;
 
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
+import javax.swing.WindowConstants;
 import javax.swing.border.LineBorder;
 
-public class Atualizar extends JFrame {
+import operations.Dates;
 
-	/**
-	 * 
-	 */
+public class Atualizar extends JFrame {
 	private static final long serialVersionUID = 7011304046253879959L;
-	private JPanel contentPane;
-	private String title;
-	private JTextField txtDdmmaaaa;
-	private JTextField txtDdmmaaaa_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
-	private JTextField textField_5;
-	private int valor = 2000;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					Atualizar frame = new Atualizar(2);
@@ -50,264 +47,411 @@ public class Atualizar extends JFrame {
 		});
 	}
 
+	private JLabel lblValores;
+	private JLabel lblMatInf;
+	private JLabel lblMatInfAtual;
+	private JLabel lblMatInfNovo;
+	private JLabel lblMatFund;
+	private JLabel lblMatFundAtual;
+	private JLabel lblParcInf;
+	private JLabel lblParcInfAtual;
+	private JLabel lblParcInfNovo;
+	private JLabel lblParcFund;
+	private JLabel lblParcFundAtual;
+	private JLabel lblParcFundNovo;
+	private JLabel lblMatFundNovo;
+	private JLabel lblInt;
+	private JLabel lblIntAtual;
+	private JLabel lblIntNovo;
+	private HintTextField hTFValoresMatInf;
+	private HintTextField hTFValoresMatFund;
+	private HintTextField hTFValoresParcInf;
+	private HintTextField hTFValoresParcFund;
+	private HintTextField hTFValoresInt;
+	private JScrollPane scrollPane;
+	private JButton btnAtt;
+	private JPanel contentPane;
+	private JPanel panelValores;
+	private JPanel panelValoresFields;
+	private JPanel panelValoresInfantilMat;
+	private JPanel panelValoresInfantilMatFields;
+	private JPanel panelValoresInfantilMatAtual;
+	private JPanel panelValoresInfantilMatNovo;
+	private JPanel panelValoresFundamentalMat;
+	private JPanel panelValoresFundamentalMatFields;
+	private JPanel panelValoresFundamentalMatAtual;
+	private JPanel panelValoresFundamentalMatNovo;
+	private JPanel panelValoresInfantilParc;
+	private JPanel panelValoresInfantilParcFields;
+	private JPanel panelValoresInfantilParcAtual;
+	private JPanel panelValoresInfantilParcNovo;
+	private JPanel panelValoresFundamentalParc;
+	private JPanel panelValoresFundamentalParcFields;
+	private JPanel panelValoresFundamentalParcAtual;
+	private JPanel panelValoresFundamentalParcNovo;
+	private JPanel panelValorIntegral;
+	private JPanel panelValorIntegralFields;
+	private JPanel panelValorIntegralAtual;
+	private JPanel panelValorIntegralNovo;
+	private String title;
+	private double valorMatInf;
+	private double valorMatFund;
+	private double valorParcInf;
+	private double valorParcFund;
+	private double valorInt;
+
+	private Dates operations;
+
 	/**
-	 * Create the frame.
+	 * Construtor.
 	 */
-	public Atualizar(int privilegios) {
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 450, 400);
+	public Atualizar(int privileges) {
+		try {
+			operations = new Dates();
+		} catch (Exception e) {
 
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(new BorderLayout(0, 0));
+		}
+		valorMatInf = operations.valor(4);
+		valorMatFund = operations.valor(5);
+		valorParcInf = operations.valor(1);
+		valorParcFund = operations.valor(2);
+		valorInt = operations.valor(3);
+		initialize(privileges);
+	}
 
+	private String doubleToString(double x) {
+		String d = "";
+		d += ((int) x);
+		d += ',';
+		d += ((int) (x * 10)) % 10;
+		d += ((int) (x * 100)) % 10;
+		return d;
+	}
 
-		JPanel panel_28 = new JPanel();
-		contentPane.add(panel_28, BorderLayout.CENTER);
-		panel_28.setLayout(new BorderLayout(0, 20));
+	/**
+	 * Inicializa as variï¿½veis.
+	 */
+	private void initialize(int privileges) {
+		/* Inicializa JLabels */
+		lblValores = new JLabel("Valores");
+		lblValores.setHorizontalAlignment(SwingConstants.CENTER);
+		lblValores.setFont(new Font("Tahoma", Font.PLAIN, 26));
 
-		JScrollPane scrollPane = new JScrollPane(panel_28);
+		lblMatInf = new JLabel("Taxa de Matr\u00EDcula(Infantil)");
+
+		lblMatInfAtual = new JLabel("Atual: R$" + doubleToString(valorMatInf));
+
+		lblMatInfNovo = new JLabel("Novo: ");
+
+		lblMatFund = new JLabel("Taxa de Matr\u00EDcula(Fundamental)");
+
+		lblMatFundAtual = new JLabel("Atual: R$" + doubleToString(valorMatFund));
+
+		lblMatFundNovo = new JLabel("Novo: ");
+
+		lblParcInf = new JLabel("Parcela(Infantil)");
+
+		lblParcInfAtual = new JLabel("Atual: R$" + doubleToString(valorParcInf));
+
+		lblParcInfNovo = new JLabel("Novo: ");
+
+		lblParcFund = new JLabel("Parcela(Fundamental)");
+
+		lblParcFundAtual = new JLabel("Atual: R$" + doubleToString(valorParcFund));
+
+		lblParcFundNovo = new JLabel("Novo: ");
+
+		lblInt = new JLabel("Valor Integral");
+
+		lblIntAtual = new JLabel("Atual: R$" + doubleToString(valorInt));
+
+		lblIntNovo = new JLabel("Novo: ");
+		/* Fim JLabels */
+
+		/* Inicializa HintTextField */
+		FocusListener flhTF = new FocusListener() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				JComponent component = (JComponent) e.getComponent();
+				((JComponent) component.getParent().getParent().getParent().getParent())
+						.scrollRectToVisible(component.getParent().getParent().getParent().getBounds());
+			}
+
+			@Override
+			public void focusLost(FocusEvent e) {
+			}
+		};
+
+		hTFValoresMatInf = new HintTextField();
+		hTFValoresMatInf.setValorHint();
+		hTFValoresMatInf.setColumns(10);
+		hTFValoresMatInf.addFocusListener(flhTF);
+
+		hTFValoresMatFund = new HintTextField();
+		hTFValoresMatFund.setValorHint();
+		hTFValoresMatFund.setColumns(10);
+		hTFValoresMatFund.addFocusListener(flhTF);
+
+		hTFValoresParcInf = new HintTextField();
+		hTFValoresParcInf.setValorHint();
+		hTFValoresParcInf.setColumns(10);
+		hTFValoresParcInf.addFocusListener(flhTF);
+
+		hTFValoresParcFund = new HintTextField();
+		hTFValoresParcFund.setValorHint();
+		hTFValoresParcFund.setColumns(10);
+		hTFValoresParcFund.addFocusListener(flhTF);
+
+		hTFValoresInt = new HintTextField();
+		hTFValoresInt.setValorHint();
+		hTFValoresInt.setColumns(10);
+		hTFValoresInt.addFocusListener(flhTF);
+
+		if (privileges == 1) { // funcionario nao pode alterar
+			hTFValoresMatInf.setEnabled(false);
+			hTFValoresMatFund.setEnabled(false);
+			hTFValoresParcInf.setEnabled(false);
+			hTFValoresParcFund.setEnabled(false);
+			hTFValoresInt.setEnabled(false);
+		}
+		/* Fim HintTextField */
+
+		/* Inicializa JButton */
+		btnAtt = new JButton("Atualizar");
+		btnAtt.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		if (privileges != 1)
+			btnAtt.addFocusListener(new FocusListener() {
+				@Override
+				public void focusGained(FocusEvent e) {
+					JComponent component = (JComponent) e.getComponent();
+					((JComponent) component.getParent()).scrollRectToVisible(component.getBounds());
+				}
+
+				@Override
+				public void focusLost(FocusEvent e) {
+				}
+			});
+		if (privileges != 1)
+			btnAtt.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					/* Checa cada um dos JTextFields */
+					String errorMsg = "";
+					boolean printError = false;
+
+					/* Matricula Infantil */
+					if (!hTFValoresMatInf.showingHint() && hTFValoresMatInf.getText().length() != 0)
+						if (hTFValoresMatInf.checaValor()) {
+							operations.atualizarMatriculaInfantil(
+									(valorMatInf = Double.parseDouble(hTFValoresMatInf.getText().replace(',', '.'))));
+							lblMatInfAtual.setText("Atual: R$" + doubleToString(valorMatInf));
+							hTFValoresMatInf.setText("");
+						} else {
+							errorMsg += "Valor da matrï¿½cula para Ensino Infantil mal formatado. ";
+							printError = true;
+						}
+
+					/* Matricula Fundamental */
+					if (!hTFValoresMatFund.showingHint() && hTFValoresMatFund.getText().length() != 0)
+						if (hTFValoresMatFund.checaValor()) {
+							operations.atualizarMatriculaFundamental(
+									(valorMatFund = Double.parseDouble(hTFValoresMatFund.getText().replace(',', '.'))));
+							lblMatFundAtual.setText("Atual: R$" + doubleToString(valorMatFund));
+							hTFValoresMatFund.setText("");
+						} else {
+							errorMsg += "Valor da matrï¿½cula para Ensino Fundamental mal formatado. ";
+							printError = true;
+						}
+
+					/* Parcela Infantil */
+					if (!hTFValoresParcInf.showingHint() && hTFValoresParcInf.getText().length() != 0)
+						if (hTFValoresParcInf.checaValor()) {
+							operations.atualizarValorInfantil(
+									(valorParcInf = Double.parseDouble(hTFValoresParcInf.getText().replace(',', '.'))));
+							lblParcInfAtual.setText("Atual: R$" + doubleToString(valorParcInf));
+							hTFValoresParcInf.setText("");
+						} else {
+							errorMsg += "Valor da parcela para Ensino Infï¿½ntil mal formatado. ";
+							printError = true;
+						}
+
+					/* Parcela Fundamental */
+					if (!hTFValoresParcFund.showingHint() && hTFValoresParcFund.getText().length() != 0)
+						if (hTFValoresParcFund.checaValor()) {
+							operations.atualizarValorFundamental((valorParcFund = Double
+									.parseDouble(hTFValoresParcFund.getText().replace(',', '.'))));
+							lblParcFundAtual.setText("Atual: R$" + doubleToString(valorParcFund));
+							hTFValoresParcFund.setText("");
+						} else {
+							errorMsg += "Valor da parcela para Ensino Fundamental mal formatado. ";
+							printError = true;
+						}
+
+					/* Valor Integral */
+					if (!hTFValoresInt.showingHint() && hTFValoresInt.getText().length() != 0)
+						if (hTFValoresInt.checaValor()) {
+							operations.atualizarIntegral(
+									(valorInt = Double.parseDouble(hTFValoresInt.getText().replace(',', '.'))));
+							lblIntAtual.setText("Atual: R$" + doubleToString(valorInt));
+							hTFValoresInt.setText("");
+						} else {
+							errorMsg += "Valor Integral mal formatado. ";
+							printError = true;
+						}
+
+					/* Mostra janela de erro */
+					if (printError)
+						JOptionPane.showMessageDialog(null, errorMsg, "Erro", JOptionPane.ERROR_MESSAGE);
+
+					try {
+						operations.fimDePrograma();
+					} catch (IOException f) {
+						// aceitaaa
+					}
+				}
+			});
+		/* Fim JButton */
+
+		/* Inicializa JPanel */
+		panelValoresInfantilMatAtual = new JPanel();
+		((FlowLayout) panelValoresInfantilMatAtual.getLayout()).setAlignment(FlowLayout.LEADING);
+		panelValoresInfantilMatAtual.add(lblMatInfAtual);
+
+		panelValoresInfantilMatNovo = new JPanel();
+		((FlowLayout) panelValoresInfantilMatNovo.getLayout()).setAlignment(FlowLayout.LEADING);
+		panelValoresInfantilMatNovo.add(lblMatInfNovo);
+		panelValoresInfantilMatNovo.add(hTFValoresMatInf);
+
+		panelValoresInfantilMatFields = new JPanel();
+		panelValoresInfantilMatFields.setLayout(new GridLayout(0, 1, 0, 0));
+		panelValoresInfantilMatFields.add(panelValoresInfantilMatAtual);
+		panelValoresInfantilMatFields.add(panelValoresInfantilMatNovo);
+
+		panelValoresInfantilMat = new JPanel();
+		panelValoresInfantilMat.setBorder(new LineBorder(Color.GRAY, 1, true));
+		panelValoresInfantilMat.setLayout(new BorderLayout(0, 5));
+		panelValoresInfantilMat.add(lblMatInf, BorderLayout.NORTH);
+		panelValoresInfantilMat.add(panelValoresInfantilMatFields, BorderLayout.CENTER);
+
+		panelValoresFundamentalMatAtual = new JPanel();
+		((FlowLayout) panelValoresFundamentalMatAtual.getLayout()).setAlignment(FlowLayout.LEADING);
+		panelValoresFundamentalMatAtual.add(lblMatFundAtual);
+
+		panelValoresFundamentalMatNovo = new JPanel();
+		((FlowLayout) panelValoresFundamentalMatNovo.getLayout()).setAlignment(FlowLayout.LEADING);
+		panelValoresFundamentalMatNovo.add(lblMatFundNovo);
+		panelValoresFundamentalMatNovo.add(hTFValoresMatFund);
+
+		panelValoresFundamentalMatFields = new JPanel();
+		panelValoresFundamentalMatFields.setLayout(new GridLayout(0, 1, 0, 0));
+		panelValoresFundamentalMatFields.add(panelValoresFundamentalMatAtual);
+		panelValoresFundamentalMatFields.add(panelValoresFundamentalMatNovo);
+
+		panelValoresFundamentalMat = new JPanel();
+		panelValoresFundamentalMat.setBorder(new LineBorder(Color.GRAY, 1, true));
+		panelValoresFundamentalMat.setLayout(new BorderLayout(0, 5));
+		panelValoresFundamentalMat.add(lblMatFund, BorderLayout.NORTH);
+		panelValoresFundamentalMat.add(panelValoresFundamentalMatFields, BorderLayout.SOUTH);
+
+		panelValoresInfantilParcAtual = new JPanel();
+		((FlowLayout) panelValoresInfantilParcAtual.getLayout()).setAlignment(FlowLayout.LEADING);
+		panelValoresInfantilParcAtual.add(lblParcInfAtual);
+
+		panelValoresInfantilParcNovo = new JPanel();
+		((FlowLayout) panelValoresInfantilParcNovo.getLayout()).setAlignment(FlowLayout.LEADING);
+		panelValoresInfantilParcNovo.add(lblParcInfNovo);
+		panelValoresInfantilParcNovo.add(hTFValoresParcInf);
+
+		panelValoresInfantilParcFields = new JPanel();
+		panelValoresInfantilParcFields.setLayout(new GridLayout(0, 1, 0, 0));
+		panelValoresInfantilParcFields.add(panelValoresInfantilParcAtual);
+		panelValoresInfantilParcFields.add(panelValoresInfantilParcNovo);
+
+		panelValoresInfantilParc = new JPanel();
+		panelValoresInfantilParc.setBorder(new LineBorder(Color.GRAY, 1, true));
+		panelValoresInfantilParc.setLayout(new BorderLayout(0, 5));
+		panelValoresInfantilParc.add(lblParcInf, BorderLayout.NORTH);
+		panelValoresInfantilParc.add(panelValoresInfantilParcFields, BorderLayout.SOUTH);
+
+		panelValoresFundamentalParcAtual = new JPanel();
+		((FlowLayout) panelValoresFundamentalParcAtual.getLayout()).setAlignment(FlowLayout.LEADING);
+		panelValoresFundamentalParcAtual.add(lblParcFundAtual);
+
+		panelValoresFundamentalParcNovo = new JPanel();
+		((FlowLayout) panelValoresFundamentalParcNovo.getLayout()).setAlignment(FlowLayout.LEADING);
+		panelValoresFundamentalParcNovo.add(lblParcFundNovo);
+		panelValoresFundamentalParcNovo.add(hTFValoresParcFund);
+
+		panelValoresFundamentalParcFields = new JPanel();
+		panelValoresFundamentalParcFields.setLayout(new GridLayout(0, 1, 0, 0));
+		panelValoresFundamentalParcFields.add(panelValoresFundamentalParcAtual);
+		panelValoresFundamentalParcFields.add(panelValoresFundamentalParcNovo);
+
+		panelValoresFundamentalParc = new JPanel();
+		panelValoresFundamentalParc.setBorder(new LineBorder(Color.GRAY, 1, true));
+		panelValoresFundamentalParc.setLayout(new BorderLayout(0, 5));
+		panelValoresFundamentalParc.add(lblParcFund, BorderLayout.NORTH);
+		panelValoresFundamentalParc.add(panelValoresFundamentalParcFields, BorderLayout.SOUTH);
+
+		panelValorIntegralAtual = new JPanel();
+		((FlowLayout) panelValorIntegralAtual.getLayout()).setAlignment(FlowLayout.LEADING);
+		panelValorIntegralAtual.add(lblIntAtual);
+
+		panelValorIntegralNovo = new JPanel();
+		((FlowLayout) panelValorIntegralNovo.getLayout()).setAlignment(FlowLayout.LEADING);
+		panelValorIntegralNovo.add(lblIntNovo);
+		panelValorIntegralNovo.add(hTFValoresInt);
+
+		panelValorIntegralFields = new JPanel();
+		panelValorIntegralFields.setLayout(new GridLayout(0, 1, 0, 0));
+		panelValorIntegralFields.add(panelValorIntegralAtual);
+		panelValorIntegralFields.add(panelValorIntegralNovo);
+
+		panelValorIntegral = new JPanel();
+		panelValorIntegral.setBorder(new LineBorder(Color.GRAY, 1, true));
+		panelValorIntegral.setLayout(new BorderLayout(0, 5));
+		panelValorIntegral.add(lblInt, BorderLayout.NORTH);
+		panelValorIntegral.add(panelValorIntegralFields, BorderLayout.SOUTH);
+
+		panelValoresFields = new JPanel();
+		panelValoresFields.setLayout(new GridLayout(5, 0, 0, 30));
+		panelValoresFields.add(panelValoresInfantilMat);
+		panelValoresFields.add(panelValoresFundamentalMat);
+		panelValoresFields.add(panelValoresInfantilParc);
+		panelValoresFields.add(panelValoresFundamentalParc);
+		panelValoresFields.add(panelValorIntegral);
+
+		panelValores = new JPanel();
+		panelValores.setLayout(new BorderLayout(0, 15));
+		panelValores.add(lblValores, BorderLayout.NORTH);
+		panelValores.add(panelValoresFields, BorderLayout.CENTER);
+		panelValores.add(btnAtt, BorderLayout.SOUTH);
+		/* Fim JPanel */
+
+		/* Inicializa JScrollPane */
+		scrollPane = new JScrollPane(panelValores);
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		/* Fim JScrollPane */
+
+		/* Inicializa o JFrame */
+		contentPane = new JPanel();
+		contentPane.setLayout(new BorderLayout(0, 0));
 		contentPane.add(scrollPane);
-
-
-		JPanel panel = new JPanel();
-		panel_28.add(panel, BorderLayout.NORTH);
-		panel.setLayout(new BorderLayout(0, 15));
-
-		JLabel lblDatas = new JLabel("Datas");
-		lblDatas.setHorizontalAlignment(SwingConstants.CENTER);
-		lblDatas.setFont(new Font("Tahoma", Font.PLAIN, 26));
-		panel.add(lblDatas, BorderLayout.NORTH);
-
-		JPanel panel_2 = new JPanel();
-		panel.add(panel_2, BorderLayout.CENTER);
-		panel_2.setLayout(new GridLayout(1, 2, 20, 0));
-
-		JPanel panel_3 = new JPanel();
-		panel_3.setBorder(new LineBorder(Color.GRAY, 1, true));
-		panel_2.add(panel_3);
-		panel_3.setLayout(new BorderLayout(0, 5));
-
-		JLabel lblIncioDeCurso = new JLabel("In\u00EDcio das Aulas");
-		lblIncioDeCurso.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblIncioDeCurso.setHorizontalAlignment(SwingConstants.CENTER);
-		panel_3.add(lblIncioDeCurso, BorderLayout.NORTH);
-
-		JPanel panel_6 = new JPanel();
-		panel_3.add(panel_6, BorderLayout.CENTER);
-		panel_6.setLayout(new GridLayout(2, 1, 0, 0));
-
-		JPanel panel_5 = new JPanel();
-		FlowLayout flowLayout_1 = (FlowLayout) panel_5.getLayout();
-		flowLayout_1.setAlignment(FlowLayout.LEADING);
-		panel_6.add(panel_5);
-		String dia = "15", mes = "06", ano = "2017";
-		JLabel lblAtual = new JLabel("Atual:       " + dia + "/" + mes + "/" + ano);
-		panel_5.add(lblAtual);
-
-		JPanel panel_7 = new JPanel();
-		FlowLayout flowLayout = (FlowLayout) panel_7.getLayout();
-		flowLayout.setAlignment(FlowLayout.LEADING);
-		panel_6.add(panel_7);
-
-		JLabel lblNova = new JLabel("Novo: ");
-		panel_7.add(lblNova);
-
-		txtDdmmaaaa = new HintTextField("dd/mm/aaaa");
-		//txtDdmmaaaa.setText("dd/mm/aaaa");
-		panel_7.add(txtDdmmaaaa);
-		txtDdmmaaaa.setColumns(10);
-
-
-
-
-		JPanel panel_4 = new JPanel();
-		panel_4.setBorder(new LineBorder(Color.GRAY, 1, true));
-		panel_2.add(panel_4);
-		panel_4.setLayout(new BorderLayout(0, 5));
-
-		JLabel lblFimDeCurso = new JLabel("Fim das Aulas");
-		lblFimDeCurso.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblFimDeCurso.setHorizontalAlignment(SwingConstants.CENTER);
-		panel_4.add(lblFimDeCurso, BorderLayout.NORTH);
-
-		JPanel panel_8 = new JPanel();
-		panel_4.add(panel_8, BorderLayout.CENTER);
-		panel_8.setLayout(new GridLayout(2, 1, 0, 0));
-
-		JPanel panel_9 = new JPanel();
-		FlowLayout flowLayout_2 = (FlowLayout) panel_9.getLayout();
-		flowLayout_2.setAlignment(FlowLayout.LEADING);
-		panel_8.add(panel_9);
-		dia = "26";
-		JLabel label_1 = new JLabel("Atual:       " + dia + "/" + mes + "/" + ano);
-		panel_9.add(label_1);
-
-		JPanel panel_10 = new JPanel();
-		FlowLayout flowLayout_3 = (FlowLayout) panel_10.getLayout();
-		flowLayout_3.setAlignment(FlowLayout.LEADING);
-		panel_8.add(panel_10);
-
-		JLabel label_2 = new JLabel("Novo: ");
-		panel_10.add(label_2);
-
-		txtDdmmaaaa_1 = new HintTextField("dd/mm/aaaa");
-		//txtDdmmaaaa_1.setText("dd/mm/aaaa");
-		txtDdmmaaaa_1.setColumns(10);
-		panel_10.add(txtDdmmaaaa_1);
-
-		JPanel panel_1 = new JPanel();
-		panel_28.add(panel_1, BorderLayout.CENTER);
-		panel_1.setLayout(new BorderLayout(0, 15));
-
-		JLabel lblNewLabel = new JLabel("Valores");
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 26));
-		panel_1.add(lblNewLabel, BorderLayout.CENTER);
-
-		JPanel panel_11 = new JPanel();
-		panel_1.add(panel_11, BorderLayout.SOUTH);
-		panel_11.setLayout(new GridLayout(4, 0, 0, 30));
-
-		JPanel panel_12 = new JPanel();
-		panel_12.setBorder(new LineBorder(Color.GRAY, 1, true));
-		panel_11.add(panel_12);
-		panel_12.setLayout(new BorderLayout(0, 5));
-
-		JLabel lblTaxaDeMatrcula = new JLabel("Taxa de Matr\u00EDcula(Infantil)");
-		panel_12.add(lblTaxaDeMatrcula, BorderLayout.NORTH);
-
-		JPanel panel_16 = new JPanel();
-		panel_12.add(panel_16, BorderLayout.CENTER);
-		panel_16.setLayout(new GridLayout(0, 1, 0, 0));
-
-		JPanel panel_17 = new JPanel();
-		FlowLayout flowLayout_4 = (FlowLayout) panel_17.getLayout();
-		flowLayout_4.setAlignment(FlowLayout.LEADING);
-		panel_16.add(panel_17);
-
-		JLabel lblAtual_1 = new JLabel("Atual: R$" + valor + ",00");
-		panel_17.add(lblAtual_1);
-
-		JPanel panel_18 = new JPanel();
-		FlowLayout flowLayout_5 = (FlowLayout) panel_18.getLayout();
-		flowLayout_5.setAlignment(FlowLayout.LEADING);
-		panel_16.add(panel_18);
-
-		JLabel lblNovo = new JLabel("Novo: ");
-		panel_18.add(lblNovo);
-
-		textField_2 = new HintTextField("xxxx,yy");
-		panel_18.add(textField_2);
-		textField_2.setColumns(10);
-
-		JPanel panel_13 = new JPanel();
-		panel_13.setBorder(new LineBorder(Color.GRAY, 1, true));
-		panel_11.add(panel_13);
-		panel_13.setLayout(new BorderLayout(0, 5));
-
-		JLabel lblNewLabel_1 = new JLabel("Taxa de Matr\u00EDcula(Fundamental)");
-		panel_13.add(lblNewLabel_1, BorderLayout.NORTH);
-
-		JPanel panel_19 = new JPanel();
-		panel_13.add(panel_19, BorderLayout.SOUTH);
-		panel_19.setLayout(new GridLayout(0, 1, 0, 0));
-
-		JPanel panel_20 = new JPanel();
-		FlowLayout flowLayout_6 = (FlowLayout) panel_20.getLayout();
-		flowLayout_6.setAlignment(FlowLayout.LEADING);
-		panel_19.add(panel_20);
-
-		JLabel label = new JLabel("Atual: R$" + valor + ",00");
-		panel_20.add(label);
-
-		JPanel panel_21 = new JPanel();
-		FlowLayout flowLayout_7 = (FlowLayout) panel_21.getLayout();
-		flowLayout_7.setAlignment(FlowLayout.LEADING);
-		panel_19.add(panel_21);
-
-		JLabel label_3 = new JLabel("Novo: ");
-		panel_21.add(label_3);
-
-		textField_3 = new HintTextField("xxxx,yy");
-		textField_3.setColumns(10);
-		panel_21.add(textField_3);
-
-		JPanel panel_14 = new JPanel();
-		panel_14.setBorder(new LineBorder(Color.GRAY, 1, true));
-		panel_11.add(panel_14);
-		panel_14.setLayout(new BorderLayout(0, 5));
-
-		JLabel lblNewLabel_2 = new JLabel("Parcela(Infantil)");
-		panel_14.add(lblNewLabel_2, BorderLayout.NORTH);
-
-		JPanel panel_22 = new JPanel();
-		panel_14.add(panel_22, BorderLayout.SOUTH);
-		panel_22.setLayout(new GridLayout(0, 1, 0, 0));
-
-		JPanel panel_23 = new JPanel();
-		FlowLayout flowLayout_8 = (FlowLayout) panel_23.getLayout();
-		flowLayout_8.setAlignment(FlowLayout.LEADING);
-		panel_22.add(panel_23);
-
-		JLabel label_4 = new JLabel("Atual: R$" + valor + ",00");
-		panel_23.add(label_4);
-
-		JPanel panel_24 = new JPanel();
-		FlowLayout flowLayout_9 = (FlowLayout) panel_24.getLayout();
-		flowLayout_9.setAlignment(FlowLayout.LEADING);
-		panel_22.add(panel_24);
-
-		JLabel label_5 = new JLabel("Novo: ");
-		panel_24.add(label_5);
-
-		textField_4 = new HintTextField("xxxx,yy");
-		textField_4.setColumns(10);
-		panel_24.add(textField_4);
-
-		JPanel panel_15 = new JPanel();
-		panel_15.setBorder(new LineBorder(Color.GRAY, 1, true));
-		panel_11.add(panel_15);
-		panel_15.setLayout(new BorderLayout(0, 5));
-
-		JLabel lblNewLabel_3 = new JLabel("Parcela(Fundamental)");
-		panel_15.add(lblNewLabel_3, BorderLayout.NORTH);
-
-		JPanel panel_25 = new JPanel();
-		panel_15.add(panel_25, BorderLayout.SOUTH);
-		panel_25.setLayout(new GridLayout(0, 1, 0, 0));
-
-		JPanel panel_26 = new JPanel();
-		FlowLayout flowLayout_10 = (FlowLayout) panel_26.getLayout();
-		flowLayout_10.setAlignment(FlowLayout.LEADING);
-		panel_25.add(panel_26);
-
-		JLabel label_6 = new JLabel("Atual: R$" + valor + ",00");
-		panel_26.add(label_6);
-
-		JPanel panel_27 = new JPanel();
-		FlowLayout flowLayout_11 = (FlowLayout) panel_27.getLayout();
-		flowLayout_11.setAlignment(FlowLayout.LEADING);
-		panel_25.add(panel_27);
-
-		JLabel label_7 = new JLabel("Novo: ");
-		panel_27.add(label_7);
-
-		textField_5 = new HintTextField("xxxx,yy");
-		textField_5.setColumns(10);
-		panel_27.add(textField_5);
-
-		JButton btnAtualizar = new JButton("Atualizar");
-		panel_28.add(btnAtualizar, BorderLayout.SOUTH);
-
-
-		/* Diferença entre privilégios */
+		this.setContentPane(contentPane);
+		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		this.setMinimumSize(new Dimension(400, 400));
+		this.getRootPane().setDefaultButton(btnAtt);
 		title = "Kronos - Atualizar Valores/Datas(";
-		switch(privilegios) {
-		case 2:	title += "Diretor";	break;
-		case 3:	title += "ADMIN";	break;
+		switch (privileges) {
+		case 1:
+			title += "Funcionï¿½rio";
+			break;
+		case 2:
+			title += "Diretor";
+			break;
+		case 3:
+			title += "ADMIN";
+			break;
 		}
 		title += ")";
 		setTitle(title);
